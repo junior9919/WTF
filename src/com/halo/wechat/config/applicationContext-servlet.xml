@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!-- 注册注解驱动 -->
+	<context:annotation-config />
+	<!-- 指定需要扫描的类包 -->
+	<context:component-scan base-package="com.*.wechat.mvc.*" />
+	<!-- 日志配置 -->
+	<bean id="appLogger" class="com.halo.wechat.logger.AppLogger" />
+	<aop:config>
+		<aop:aspect ref="appLogger">
+			<!-- 执行controller方法的切点 -->
+			<aop:pointcut id="handleRequest"
+				expression="execution(* com.halo.wechat.mvc.controllers.WeChatMessageController.handleRequest(..))" />
+			<aop:before pointcut-ref="handleRequest" method="logBeforeHandleRequest" />
+			<aop:after pointcut-ref="handleRequest" method="logAfterHandleRequest" />
+			<aop:after-throwing pointcut-ref="handleRequest"
+				method="afterThrowing" throwing="e" />
+			<!-- 执行service方法的切点 -->
+			<aop:pointcut id="serviceCheckSignature"
+				expression="execution(* com.halo.wechat.mvc.services.impls.MessageServiceImpl.checkSignature(..))" />
+			<aop:before pointcut-ref="serviceCheckSignature" method="logBeforeServiceCheckSignature" />
+			<aop:after pointcut-ref="serviceCheckSignature" method="afterMethod" />
+			<aop:after-throwing pointcut-ref="serviceCheckSignature"
+				method="afterThrowing" throwing="e" />
+			<aop:pointcut id="serviceProcessMessage"
+				expression="execution(* com.halo.wechat.mvc.services.impls.MessageServiceImpl.processMessage(..))" />
+			<aop:before pointcut-ref="serviceProcessMessage" method="logBeforeServiceProcessMessage" />
+			<aop:after pointcut-ref="serviceProcessMessage" method="afterMethod" />
+			<aop:after-throwing pointcut-ref="serviceProcessMessage"
+				method="afterThrowing" throwing="e" />
+			<!-- 执行用户命令对象方法的切点 -->
+			<aop:pointcut id="commandMethod"
+				expression="execution(* com.user.wechat.mvc.commands.UserCommand.*(..)) and args(..)" />
+			<aop:before pointcut-ref="commandMethod" method="logBeforeCommandProcess" />
+			<aop:after pointcut-ref="commandMethod" method="afterMethod" />
+			<aop:after-throwing pointcut-ref="commandMethod"
+				method="afterThrowing" throwing="e" />
+		</aop:aspect>
+	</aop:config>
+</beans>
