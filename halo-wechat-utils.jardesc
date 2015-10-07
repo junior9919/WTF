@@ -15,5 +15,6 @@
         <javaElement handleIdentifier="=WeChat/src&lt;com.halo.wechat.logger"/>
         <javaElement handleIdentifier="=WeChat/src&lt;com.halo.wechat.security"/>
         <javaElement handleIdentifier="=WeChat/src&lt;com.halo.wechat.xml.utils.converters"/>
+        <javaElement handleIdentifier="=WeChat/src&lt;com.halo.servlet.listeners"/>
     </selectedElements>
 </jardesc>

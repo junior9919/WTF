@@ -17,7 +17,8 @@ import org.aspectj.lang.JoinPoint;
  *
  */
 public class AppLogger {
-	private static Logger logger = LogManager.getLogger(AppLogger.class.getName());
+
+	private Logger logger = LogManager.getLogger(AppLogger.class.getName());
 
 	private String[] getObjectFields(Object obj) {
 		String colNames = "";
@@ -29,7 +30,6 @@ public class AppLogger {
 				try {
 					fieldValue = method.invoke(obj);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					// TODO Auto-generated catch block
 					logger.error(e.getMessage());
 				}
 				colNames += fieldName + "|";
@@ -43,6 +43,10 @@ public class AppLogger {
 
 		String[] cols = new String[] { colNames.substring(0, colNames.length() - 1), colValues.substring(0, colValues.length() - 1) };
 		return cols;
+	}
+
+	public Logger getLogger() {
+		return this.logger;
 	}
 
 	public void beforeMethod(JoinPoint jp) {
@@ -144,4 +148,5 @@ public class AppLogger {
 			logger.debug("Compare parameters: " + orginSignature + "|" + compareToSignature + "|" + echoStr);
 		}
 	}
+
 }
