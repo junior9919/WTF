@@ -147,21 +147,36 @@ public class CustomMenuLoadListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent arg0) {
 		appLogger = (AppLogger) SpringUtils.getBean("appLogger");
 
+		appLogger.getLogger().debug("Starting create menu...");
+
 		String menuFileName = getMenuFileName(arg0.getServletContext());
+
+		appLogger.getLogger().debug("Menu file is " + menuFileName);
+
 		File menuFile = getMenuFile(menuFileName);
 		if (null != menuFile) {
+
+			appLogger.getLogger().debug("Got a menu file.");
+
 			CustomMenuAbility customMenuAbility = (CustomMenuAbility) SpringUtils.getBean("customMenuAbility");
 			if (null == customMenuAbility) {
 				appLogger.getLogger().error("Get customMenuAbility bean error, may be applicationContext-wechat.xml is damaged.");
 				return;
 			}
 			if (menuFileName.endsWith("deleteMenu.json")) {
-				deleteMenu(customMenuAbility);
+
+				appLogger.getLogger().debug("Ready to delete menu.");
+
+				if (!deleteMenu(customMenuAbility)) {
+					appLogger.getLogger().debug("Delete menu request has no response.");
+				}
 			} else {
 				String jsonStr = getJsonStr(menuFile);
 				if (null != jsonStr && !jsonStr.isEmpty()) {
 					if (deleteMenu(customMenuAbility)) {
-						createMenu(jsonStr, customMenuAbility);
+						if (!createMenu(jsonStr, customMenuAbility)) {
+							appLogger.getLogger().debug("Create menu wrong.");
+						}
 					}
 				} else {
 					appLogger.getLogger().error("File read error, or file is empty.");
@@ -169,6 +184,8 @@ public class CustomMenuLoadListener implements ServletContextListener {
 
 			}
 		}
+
+		appLogger.getLogger().debug("End create menu.");
 	}
 
 }
