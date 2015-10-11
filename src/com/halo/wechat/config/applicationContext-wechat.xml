@@ -36,6 +36,9 @@
 	<bean id="link" class="com.halo.wechat.saos.impls.LinkMessageSaoImpl">
 		<property name="xmlTemplate" ref="xmlTemplate" />
 	</bean>
+	<bean id="news" class="com.halo.wechat.saos.impls.NewsMessageSaoImpl">
+		<property name="xmlTemplate" ref="xmlTemplate" />
+	</bean>
 	<bean id="event" class="com.halo.wechat.saos.impls.EventSaoImpl">
 		<property name="xmlTemplate" ref="xmlTemplate" />
 	</bean>

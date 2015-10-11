@@ -49,6 +49,11 @@ public class MsgType {
 	public static final String LINK = "link";
 
 	/**
+	 * 图文消息
+	 */
+	public static final String NEWS = "news";
+
+	/**
 	 * 事件
 	 */
 	public static final String EVENT = "event";

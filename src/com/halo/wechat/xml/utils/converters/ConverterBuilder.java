@@ -15,10 +15,12 @@ public class ConverterBuilder {
 		PrimitiveConverter primitiveConverter = new PrimitiveConverter();
 		StringConverter stringConverter = new StringConverter();
 		TimestampConverter timestampConverter = new TimestampConverter();
+		ArticlesConverter articlesConverter = new ArticlesConverter();
 
 		commonConverter.setNextConverter(primitiveConverter);
 		primitiveConverter.setNextConverter(stringConverter);
 		stringConverter.setNextConverter(timestampConverter);
+		timestampConverter.setNextConverter(articlesConverter);
 
 		return commonConverter;
 	}

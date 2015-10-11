@@ -173,6 +173,13 @@ public class MessageCapability extends AbstractCapability implements MessageAbil
 							+ " failed, please make sure bean defined in applicationContext-wechat.xml");
 				}
 				responseXml = sao.save(message);
+
+				/*
+				 * AppLogger appLogger = (AppLogger)
+				 * SpringUtils.getBean("appLogger");
+				 * appLogger.getLogger().debug("Response message: " +
+				 * responseXml);
+				 */
 			} catch (SaoException e) {
 				throw new CapabilityException("An error occured when save message to xml.");
 			}
