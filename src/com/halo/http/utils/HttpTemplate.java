@@ -11,4 +11,6 @@ public interface HttpTemplate {
 
 	public String post(String url, Map<String, String> args, String requestBody, String contentType) throws HttpUtilsException;
 
+	public File downloadUsePost(String url, Map<String, String> args, String requestBody, String contentType) throws HttpUtilsException;
+
 }

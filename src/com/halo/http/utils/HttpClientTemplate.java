@@ -67,7 +67,7 @@ public class HttpClientTemplate implements HttpTemplate {
 			while ((size = bufferedInputStream.read(bytes)) != -1) {
 				outputStream.write(bytes, 0, size);
 			}
-		} catch (IOException e1) {
+		} catch (IOException e) {
 			throw new HttpUtilsException("File i/o error.");
 		}
 
@@ -81,11 +81,6 @@ public class HttpClientTemplate implements HttpTemplate {
 		return downloadFile;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.halo.http.utils.HttpTemplate#get(java.util.Map)
-	 */
 	@Override
 	public String get(String url, Map<String, String> args) throws HttpUtilsException {
 		String urlWithArgs = getUrlWithArgs(url, args);
@@ -129,6 +124,7 @@ public class HttpClientTemplate implements HttpTemplate {
 
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpGet httpGet = new HttpGet(urlWithArgs);
+
 		// Create a custom response handler
 		ResponseHandler<File> responseHandler = new ResponseHandler<File>() {
 
@@ -168,12 +164,6 @@ public class HttpClientTemplate implements HttpTemplate {
 		return downloadFile;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.halo.http.utils.HttpTemplate#post(java.util.Map,
-	 * java.lang.String)
-	 */
 	@Override
 	public String post(String url, Map<String, String> args, String requestBody, String contentType) throws HttpUtilsException {
 		String urlWithArgs = getUrlWithArgs(url, args);
@@ -217,6 +207,59 @@ public class HttpClientTemplate implements HttpTemplate {
 		}
 
 		return responseBody;
+	}
+
+	@Override
+	public File downloadUsePost(String url, Map<String, String> args, String requestBody, String contentType) throws HttpUtilsException {
+		String urlWithArgs = getUrlWithArgs(url, args);
+
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpPost httpPost = new HttpPost(urlWithArgs);
+		StringEntity reqEntity = new StringEntity(requestBody, "UTF-8");
+		reqEntity.setContentEncoding("UTF-8");
+		if (null != contentType && !contentType.isEmpty()) {
+			// application/json
+			reqEntity.setContentType(contentType);
+		}
+		httpPost.setEntity(reqEntity);
+
+		// Create a custom response handler
+		ResponseHandler<File> responseHandler = new ResponseHandler<File>() {
+
+			@Override
+			public File handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
+				int status = response.getStatusLine().getStatusCode();
+				if (status >= 200 && status < 300) {
+					HttpEntity entity = response.getEntity();
+					if (entity == null) {
+						throw new ClientProtocolException("Response contains no content");
+					}
+					try {
+						return saveStreamToFile(entity.getContent());
+					} catch (HttpUtilsException e) {
+						throw new IOException("Save file error.");
+					}
+				} else {
+					throw new ClientProtocolException("Unexpected response status: " + status);
+				}
+			}
+
+		};
+
+		File downloadFile = null;
+		try {
+			downloadFile = httpClient.execute(httpPost, responseHandler);
+		} catch (IOException e) {
+			throw new HttpUtilsException("An error occued when execute http post method: " + urlWithArgs);
+		} finally {
+			try {
+				httpClient.close();
+			} catch (IOException e) {
+				throw new HttpUtilsException("An error occued when close http client.");
+			}
+		}
+
+		return downloadFile;
 	}
 
 }

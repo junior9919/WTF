@@ -18,16 +18,20 @@ public class MaterialListBean extends ResultBean {
 
 	public class Item {
 
-		private int media_id;
+		private String media_id;
+
+		private String name;
 
 		private Content content;
 
 		private String update_time;
 
+		private String url;
+
 		/**
 		 * @return 素材id（必须是永久mediaID）
 		 */
-		public int getMedia_id() {
+		public String getMedia_id() {
 			return media_id;
 		}
 
@@ -35,8 +39,23 @@ public class MaterialListBean extends ResultBean {
 		 * @param media_id
 		 *            素材id（必须是永久mediaID）
 		 */
-		public void setMedia_id(int media_id) {
+		public void setMedia_id(String media_id) {
 			this.media_id = media_id;
+		}
+
+		/**
+		 * @return 文件名称
+		 */
+		public String getName() {
+			return name;
+		}
+
+		/**
+		 * @param name
+		 *            文件名称
+		 */
+		public void setName(String name) {
+			this.name = name;
 		}
 
 		/**
@@ -67,6 +86,21 @@ public class MaterialListBean extends ResultBean {
 		 */
 		public void setUpdate_time(String update_time) {
 			this.update_time = update_time;
+		}
+
+		/**
+		 * @return 当获取的列表是图片素材列表时，该字段是图片的URL
+		 */
+		public String getUrl() {
+			return url;
+		}
+
+		/**
+		 * @param url
+		 *            当获取的列表是图片素材列表时，该字段是图片的URL
+		 */
+		public void setUrl(String url) {
+			this.url = url;
 		}
 
 	}
