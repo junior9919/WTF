@@ -25,7 +25,7 @@ public class AccessSupportCapability extends AccessCapability {
 	 * @throws CapabilityException
 	 *             加载"wechat.properties"配置文件失败抛出的异常
 	 */
-	public AccessSupportCapability() throws CapabilityException {
+	public AccessSupportCapability() throws PropertiesException {
 
 	}
 
@@ -33,13 +33,14 @@ public class AccessSupportCapability extends AccessCapability {
 	 * 获取接口调用凭据
 	 * 
 	 * @return 接口调用凭据（access token）
-	 * @throws CapabilityException
+	 * @throws NullAccessTokenException
 	 *             获取接口调用凭据返回null值时抛出该异常
+	 *             @throws CapabilityException 从ServletContext中读写AccessTokenBean失败、请求AccessToken失败、读参数失败引发的异常
 	 */
-	public AccessTokenBean retrieveAccessToken() throws CapabilityException {
+	public AccessTokenBean retrieveAccessToken() throws NullAccessTokenException, CapabilityException {
 		AccessTokenBean accessTokenBean = getAccessToken();
 		if (null == accessTokenBean) {
-			throw new CapabilityException("Can't get access token.");
+			throw new NullAccessTokenException("Get access token failed.");
 		}
 		return accessTokenBean;
 	}

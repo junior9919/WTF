@@ -61,8 +61,7 @@ public class DomTemplate implements XmlTemplate {
 			builder = factory.newDocumentBuilder();
 			document = builder.parse(new ByteArrayInputStream(xmlContent.getBytes()));
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			// TODO throw new XmlParseException
-			throw new XmlParseException("An error occured when attempt to parse a XML document. ");
+			throw new XmlParseException("Parse XML document error. ", e);
 		}
 	}
 
@@ -81,12 +80,8 @@ public class DomTemplate implements XmlTemplate {
 		T obj = null;
 		try {
 			obj = clazz.newInstance();
-		} catch (InstantiationException e) {
-			// TODO throw new XmlConvertException
-			throw new XmlConvertException("An error occured when create new instance of " + clazz.getName());
-		} catch (IllegalAccessException e) {
-			// TODO throw new XmlConvertException
-			throw new XmlConvertException("An error occured when create new instance of " + clazz.getName());
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new XmlConvertException("Create new instance of " + clazz.getName() + " failed.", e);
 		}
 
 		for (String fieldName : setters.keySet()) {
@@ -104,20 +99,16 @@ public class DomTemplate implements XmlTemplate {
 				try {
 					setter.invoke(obj, new Object[] { null });
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					throw new XmlConvertException("An error occured when invoke " + setter.getName());
+					throw new XmlConvertException("Invoke method " + setter.getName() + " failed.", e);
 				}
 				continue;
-				// throw new XmlConvertException("Field " + fieldName +
-				// " not found in xml. ");
 			}
 
 			NodeConverter converter = ConverterBuilder.newConverter();
 			try {
 				setter.invoke(obj, converter.convert(paramTypes[0], nodes.item(0)));
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				// TODO throw new XmlConvertException
-				throw new XmlConvertException("An error occured when invoke " + setter.getName());
+				throw new XmlConvertException("Invoke method " + setter.getName() + " failed.", e);
 			}
 		}
 		return obj;
@@ -137,8 +128,7 @@ public class DomTemplate implements XmlTemplate {
 			try {
 				value = getter.invoke(obj);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-				// TODO throw new XmlConvertException
-				throw new XmlConvertException("An error occured when invoke " + getter.getName());
+				throw new XmlConvertException("Invoke method " + getter.getName() + " failed.", e);
 			}
 
 			String xmlValue = converter.reverse(value);

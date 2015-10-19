@@ -25,7 +25,7 @@ public abstract class AbstractMessageSaoImpl implements XmlSao {
 			return this.getXmlTemplate().get(clazz, xmlContent);
 		} catch (XmlParseException | XmlConvertException e) {
 			// TODO Auto-generated catch block
-			throw new SaoException("An error occured when get " + clazz.getName() + " from XML");
+			throw new SaoException("Create " + clazz.getName() + " from XML failed. ", e);
 		}
 	}
 
@@ -47,12 +47,10 @@ public abstract class AbstractMessageSaoImpl implements XmlSao {
 	public abstract MsgType get(String xmlContent) throws SaoException;
 
 	public String save(MsgType message) throws SaoException {
-		// TODO Auto-generated method stub
 		try {
 			return this.getXmlTemplate().save(message);
 		} catch (XmlConvertException e) {
-			// TODO Auto-generated catch block
-			throw new SaoException("An error occured when save " + message.getClass().getName());
+			throw new SaoException("Reverse " + message.getClass().getName() + " to XML failed.", e);
 		}
 	}
 }

@@ -1,6 +1,5 @@
 package com.halo.spring.utils;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -31,11 +30,11 @@ public class SpringUtils implements ApplicationContextAware {
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext arg0) throws BeansException {
+	public void setApplicationContext(ApplicationContext arg0) {
 		applicationContext = arg0;
 	}
 
-	public static Object getServletBean(String servletName, String beanId) throws SpringUtilsException {
+	public static Object getServletBean(String servletName, String beanId) throws NullWebApplicationContextException {
 		ApplicationContext servletApplicationContext = (ApplicationContext) getFromServletContext(FrameworkServlet.class.getName() + ".CONTEXT." + servletName);
 		Object bean = null;
 		try {
@@ -56,23 +55,23 @@ public class SpringUtils implements ApplicationContextAware {
 		return bean;
 	}
 
-	public static void addIntoServletContext(String attrId, Object toAdd) throws SpringUtilsException {
+	public static void addIntoServletContext(String attrId, Object toAdd) throws NullWebApplicationContextException {
 		if (null == webApplicationContext) {
 			webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
 		}
 		if (null == webApplicationContext) {
-			throw new SpringUtilsException(
+			throw new NullWebApplicationContextException(
 					"Spring WebApplicationContext is null, please check web.xml make sure ContextLoaderListener configuration is correct.");
 		}
 		webApplicationContext.getServletContext().setAttribute(attrId, toAdd);
 	}
 
-	public static Object getFromServletContext(String attrId) throws SpringUtilsException {
+	public static Object getFromServletContext(String attrId) throws NullWebApplicationContextException {
 		if (null == webApplicationContext) {
 			webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
 		}
 		if (null == webApplicationContext) {
-			throw new SpringUtilsException(
+			throw new NullWebApplicationContextException(
 					"Spring WebApplicationContext is null, please check web.xml make sure ContextLoaderListener configuration is correct.");
 		}
 		return webApplicationContext.getServletContext().getAttribute(attrId);

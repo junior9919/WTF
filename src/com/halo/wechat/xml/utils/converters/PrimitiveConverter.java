@@ -17,13 +17,6 @@ import com.halo.wechat.xml.utils.XmlConvertException;
  */
 public class PrimitiveConverter extends NodeConverter {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.halo.wechat.xml.utils.converters.NodeConverter#convert(java.lang.
-	 * Class, org.w3c.dom.Node)
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T convert(Class<T> clazz, Node node) throws XmlConvertException {
@@ -72,8 +65,7 @@ public class PrimitiveConverter extends NodeConverter {
 				try {
 					return quotedCDATA(new String(b, "UTF-8"));
 				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					throw new XmlConvertException("Unsupported encoding " + e.getMessage());
+					throw new XmlConvertException("Create string from byte failed.", e);
 				}
 			} else if (className.equals("java.lang.Short")) {
 				return String.valueOf((int) obj);

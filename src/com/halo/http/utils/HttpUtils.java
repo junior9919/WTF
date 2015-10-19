@@ -18,7 +18,7 @@ public class HttpUtils {
 		try {
 			stream = request.getInputStream();
 		} catch (IOException e) {
-			throw new HttpUtilsException("An error occured when get input stream. ");
+			throw new HttpUtilsException("Can't get request input stream.", e);
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -29,11 +29,11 @@ public class HttpUtils {
 				try {
 					sb.append(new String(b, 0, n, "UTF-8"));
 				} catch (UnsupportedEncodingException e) {
-					throw new HttpUtilsException("Can't create string from byte. ");
+					throw new HttpUtilsException("Can't create string from byte.", e);
 				}
 			}
 		} catch (IOException e) {
-			throw new HttpUtilsException("An error occured when read from stream. ");
+			throw new HttpUtilsException("Read from stream error.", e);
 		}
 		return sb.toString();
 	}

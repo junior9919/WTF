@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.halo.wechat.capabilities.CapabilityException;
+import com.halo.wechat.capabilities.NullSaoException;
 import com.halo.wechat.messages.Message;
 import com.halo.wechat.messages.MsgType;
 import com.halo.wechat.mvc.commands.Command;
@@ -17,13 +18,14 @@ public interface MessageAbility {
 	 *            微信公众平台的post请求
 	 * @return 从xml格式的消息（或事件）转换成的MsgType类型的对象，其实际对象类型可通过getMsgType方法获得。
 	 * @throws CapabilityException
-	 *             读取request中的实体信息错误，基于Spring框架的applicationContext_wechat.
-	 *             xml文件内容损坏，解析xml错误，都会引发该异常
+	 *             读取request中的实体信息错误，解析xml错误，都会引发该异常
+	 * @throws NullSaoException
+	 *             applicationContext_wechat.xml文件内容损坏导致读取bean失败
 	 * @see MsgType, BaseMessage, Message, TextMessage, ImageMessage,
 	 *      LinkMessage, LocationMessage, VideoMessage, ShortVideoMessage,
 	 *      VoiceMessage
 	 */
-	public MsgType receiveMessage(HttpServletRequest request) throws CapabilityException;
+	public MsgType receiveMessage(HttpServletRequest request) throws CapabilityException, NullSaoException;
 
 	/**
 	 * 执行用户自定义的Command接口实现类。
@@ -46,12 +48,13 @@ public interface MessageAbility {
 	 * @param message
 	 *            用户的回复消息。
 	 * @throws CapabilityException
-	 *             基于Spring框架的applicationContext_wechat.
-	 *             xml文件内容损坏，解析xml错误，回复消息错误，都会引发该异常
+	 *             生成XML错误，写入response流失败，都会引发该异常
+	 * @throws NullSaoException
+	 *             applicationContext_wechat.xml文件内容损坏导致读取bean失败
 	 * @see MsgType, BaseMessage, Message, TextMessage, ImageMessage,
 	 *      LinkMessage, LocationMessage, VideoMessage, ShortVideoMessage,
 	 *      VoiceMessage
 	 */
-	public void responseMessage(HttpServletResponse response, Message message) throws CapabilityException;
+	public void responseMessage(HttpServletResponse response, Message message) throws CapabilityException, NullSaoException;
 
 }

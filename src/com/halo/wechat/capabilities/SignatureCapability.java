@@ -50,7 +50,7 @@ public class SignatureCapability extends AbstractCapability implements Signature
 
 			return hexString.toString();
 		} catch (NoSuchAlgorithmException e) {
-			throw new CapabilityException("Encode error: " + e.getMessage());
+			throw new CapabilityException("Encode signature error. ", e);
 		}
 	}
 
@@ -84,7 +84,7 @@ public class SignatureCapability extends AbstractCapability implements Signature
 				response.getWriter().write(echoStr);
 				return true;
 			} catch (IOException e) {
-				throw new CapabilityException("Write response echostr error: " + e.getMessage());
+				throw new CapabilityException("Write response echostr error. ", e);
 			}
 		} else {
 			return false;
@@ -98,7 +98,7 @@ public class SignatureCapability extends AbstractCapability implements Signature
 	 * @throws CapabilityException
 	 *             加载"wechat.properties"配置文件失败抛出的异常
 	 */
-	public SignatureCapability() throws CapabilityException {
+	public SignatureCapability() throws PropertiesException {
 
 	}
 
@@ -110,7 +110,11 @@ public class SignatureCapability extends AbstractCapability implements Signature
 	 *             token参数在配置文件中不存在，或未设置值。
 	 */
 	public String getToken() throws CapabilityException {
-		return getProperty(TOKEN);
+		try {
+			return getProperty(TOKEN);
+		} catch (UndefinedPropertyException e) {
+			throw new CapabilityException("Get property token failed.", e);
+		}
 	}
 
 	/**

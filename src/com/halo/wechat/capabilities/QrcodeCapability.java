@@ -41,7 +41,7 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 	 * @throws CapabilityException
 	 *             加载"wechat.properties"配置文件失败抛出的异常
 	 */
-	public QrcodeCapability() throws CapabilityException {
+	public QrcodeCapability() throws PropertiesException {
 
 	}
 
@@ -65,7 +65,11 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 	@Override
 	public QrcodeResultBean getTemporaryQrcode(int expireSeconds, int sceneId) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		args.put("access_token", retrieveAccessToken().getAccess_token());
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
 
 		QrcodeBean qrcode = new QrcodeBean();
 		qrcode.setExpire_seconds(expireSeconds);
@@ -84,7 +88,7 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 		try {
 			resultStr = this.getHttpTemplate().post(GET_QRCODE_URL, args, jsonStr, JSON_CONTENT_TYPE);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Get QR_SCENE qrcode failed. ");
+			throw new CapabilityException("Get QR_SCENE qrcode failed. ", e);
 		}
 
 		return getJsonBean(new JSONUtils<QrcodeResultBean>(QrcodeResultBean.class), resultStr);
@@ -109,7 +113,11 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 	@Override
 	public QrcodeResultBean getPermanentQrcode(String sceneStr) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		args.put("access_token", retrieveAccessToken().getAccess_token());
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
 
 		QrcodeBean qrcode = new QrcodeBean();
 		qrcode.setAction_name(QrcodeBean.QR_LIMIT_STR_SCENE);
@@ -127,7 +135,7 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 		try {
 			resultStr = this.getHttpTemplate().post(GET_QRCODE_URL, args, jsonStr, JSON_CONTENT_TYPE);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Get QR_LIMIT_STR_SCENE qrcode failed. ");
+			throw new CapabilityException("Get " + QrcodeBean.QR_LIMIT_STR_SCENE + " qrcode failed. ", e);
 		}
 
 		return getJsonBean(new JSONUtils<QrcodeResultBean>(QrcodeResultBean.class), resultStr);
@@ -150,7 +158,11 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 	@Override
 	public QrcodeResultBean getPermanentQrcode(int sceneId) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		args.put("access_token", retrieveAccessToken().getAccess_token());
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
 
 		QrcodeBean qrcode = new QrcodeBean();
 		qrcode.setAction_name(QrcodeBean.QR_LIMIT_SCENE);
@@ -168,7 +180,7 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 		try {
 			resultStr = this.getHttpTemplate().post(GET_QRCODE_URL, args, jsonStr, JSON_CONTENT_TYPE);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Get QR_LIMIT_SCENE qrcode failed. ");
+			throw new CapabilityException("Get " + QrcodeBean.QR_LIMIT_SCENE + " qrcode failed. ", e);
 		}
 
 		return getJsonBean(new JSONUtils<QrcodeResultBean>(QrcodeResultBean.class), resultStr);
@@ -192,7 +204,7 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 		try {
 			downloadFile = this.getHttpTemplate().download(GET_QRCODE_IMAGE_URL, args);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Download qrcode image error.");
+			throw new CapabilityException("Download qrcode image error.", e);
 		}
 		return downloadFile;
 	}

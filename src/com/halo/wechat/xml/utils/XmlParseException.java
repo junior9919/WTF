@@ -11,12 +11,14 @@ package com.halo.wechat.xml.utils;
  */
 public class XmlParseException extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1767017892034726121L;
 
 	public XmlParseException(String message) {
 		super(message);
 	}
+
+	public XmlParseException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }

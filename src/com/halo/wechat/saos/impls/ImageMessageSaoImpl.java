@@ -15,11 +15,6 @@ import com.halo.wechat.saos.SaoException;
  */
 public class ImageMessageSaoImpl extends AbstractMessageSaoImpl {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.halo.wechat.saos.XmlSao#get(java.lang.String)
-	 */
 	@Override
 	public MsgType get(String xmlContent) throws SaoException {
 		return getByClass(ImageMessage.class, xmlContent);

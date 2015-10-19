@@ -10,8 +10,8 @@ public class PropertiesException extends Exception {
 
 	private static final long serialVersionUID = 8637669635019397883L;
 
-	public PropertiesException(String arg0) {
-		super(arg0);
+	public PropertiesException(String message) {
+		super(message);
 	}
 
 }

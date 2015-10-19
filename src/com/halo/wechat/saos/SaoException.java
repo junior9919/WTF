@@ -11,16 +11,14 @@ package com.halo.wechat.saos;
  */
 public class SaoException extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4439023763171846777L;
 
-	/**
-	 * @param arg0
-	 */
-	public SaoException(String arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
+	public SaoException(String message) {
+		super(message);
 	}
+
+	public SaoException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }

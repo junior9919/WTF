@@ -11,12 +11,14 @@ package com.halo.http.utils;
  */
 public class HttpUtilsException extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7379733374170302597L;
 
 	public HttpUtilsException(String message) {
 		super(message);
 	}
+	
+	public HttpUtilsException(String message, Throwable cause) {
+		super(message, cause);
+	}
+	
 }

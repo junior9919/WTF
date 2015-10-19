@@ -15,9 +15,6 @@ import java.util.Properties;
  */
 public class WechatProperties extends Properties {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -7792017334419363603L;
 
 	private final static String WECHAT_PROPERTIES_FILE_NAME = "wechat.properties";
@@ -30,7 +27,6 @@ public class WechatProperties extends Properties {
 
 	private WechatProperties(Properties arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	public static synchronized WechatProperties getInstance() throws PropertiesException {
@@ -38,12 +34,12 @@ public class WechatProperties extends Properties {
 			instance = new WechatProperties();
 			InputStream propertiesFileStream = WechatProperties.class.getResourceAsStream("/" + WECHAT_PROPERTIES_FILE_NAME);
 			if (null == propertiesFileStream) {
-				throw new PropertiesException("Load properties file " + WECHAT_PROPERTIES_FILE_NAME + " failed, please sure file is in the classpath.");
+				throw new PropertiesFileNotExistException("Load " + WECHAT_PROPERTIES_FILE_NAME + " failed, please make sure that file is in the classpath.");
 			}
 			try {
 				instance.load(propertiesFileStream);
 			} catch (IOException e) {
-				throw new PropertiesException("Load properties file " + WECHAT_PROPERTIES_FILE_NAME + " error: " + e.getMessage());
+				throw new PropertiesException("Load " + WECHAT_PROPERTIES_FILE_NAME + " error, " + e.getMessage());
 			}
 		}
 		return instance;

@@ -17,13 +17,6 @@ import com.halo.wechat.xml.utils.XmlConvertException;
  */
 public class TimestampConverter extends NodeConverter {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.halo.wechat.xml.utils.converters.NodeConverter#convert(java.lang.
-	 * Class, org.w3c.dom.Node)
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T convert(Class<T> clazz, Node node) throws XmlConvertException {

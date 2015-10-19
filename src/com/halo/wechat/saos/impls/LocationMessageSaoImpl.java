@@ -15,12 +15,6 @@ import com.halo.wechat.saos.SaoException;
  */
 public class LocationMessageSaoImpl extends AbstractMessageSaoImpl {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.halo.wechat.saos.impls.AbstractMessageSaoImpl#get(java.lang.String)
-	 */
 	@Override
 	public MsgType get(String xmlContent) throws SaoException {
 		return getByClass(LocationMessage.class, xmlContent);

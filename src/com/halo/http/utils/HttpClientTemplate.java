@@ -33,7 +33,7 @@ public class HttpClientTemplate implements HttpTemplate {
 			try {
 				paramValue = URLEncoder.encode(args.get(paramName), "UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				throw new HttpUtilsException("URL get parameter encode error: " + e.getMessage());
+				throw new HttpUtilsException("URL encode error.", e);
 			}
 			params += paramName + "=" + paramValue + "&";
 		}
@@ -56,7 +56,7 @@ public class HttpClientTemplate implements HttpTemplate {
 		try {
 			outputStream = new FileOutputStream(downloadFile);
 		} catch (FileNotFoundException e) {
-			throw new HttpUtilsException("Download file path " + downloadFile.getPath() + " not found.");
+			throw new HttpUtilsException("Can't create a FileOutputStream.", e);
 		}
 
 		int size = 0;
@@ -68,14 +68,14 @@ public class HttpClientTemplate implements HttpTemplate {
 				outputStream.write(bytes, 0, size);
 			}
 		} catch (IOException e) {
-			throw new HttpUtilsException("File i/o error.");
+			throw new HttpUtilsException("Can't read from input stream or write to output stream.", e);
 		}
 
 		try {
 			outputStream.flush();
 			outputStream.close();
 		} catch (IOException e) {
-			throw new HttpUtilsException("Close stream error.");
+			throw new HttpUtilsException("Close stream error.", e);
 		}
 
 		return downloadFile;
@@ -87,6 +87,7 @@ public class HttpClientTemplate implements HttpTemplate {
 
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpGet httpGet = new HttpGet(urlWithArgs);
+
 		// Create a custom response handler
 		ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
 
@@ -106,12 +107,12 @@ public class HttpClientTemplate implements HttpTemplate {
 		try {
 			responseBody = httpClient.execute(httpGet, responseHandler);
 		} catch (IOException e) {
-			throw new HttpUtilsException("An error occued when execute http get method: " + urlWithArgs);
+			throw new HttpUtilsException("Get from " + urlWithArgs + " error.", e);
 		} finally {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
-				throw new HttpUtilsException("An error occued when close http client.");
+				throw new HttpUtilsException("Close http stream error.", e);
 			}
 		}
 
@@ -134,12 +135,12 @@ public class HttpClientTemplate implements HttpTemplate {
 				if (status >= 200 && status < 300) {
 					HttpEntity entity = response.getEntity();
 					if (entity == null) {
-						throw new ClientProtocolException("Response contains no content");
+						throw new ClientProtocolException("There's no content in http response.");
 					}
 					try {
 						return saveStreamToFile(entity.getContent());
 					} catch (HttpUtilsException e) {
-						throw new IOException("Save file error.");
+						throw new IOException("Save file error.", e);
 					}
 				} else {
 					throw new ClientProtocolException("Unexpected response status: " + status);
@@ -152,12 +153,12 @@ public class HttpClientTemplate implements HttpTemplate {
 		try {
 			downloadFile = httpClient.execute(httpGet, responseHandler);
 		} catch (IOException e) {
-			throw new HttpUtilsException("An error occued when execute http get method: " + urlWithArgs);
+			throw new HttpUtilsException("Download from " + urlWithArgs + " error.", e);
 		} finally {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
-				throw new HttpUtilsException("An error occued when close http client.");
+				throw new HttpUtilsException("Close http stream error.", e);
 			}
 		}
 
@@ -197,12 +198,12 @@ public class HttpClientTemplate implements HttpTemplate {
 		try {
 			responseBody = httpClient.execute(httpPost, responseHandler);
 		} catch (IOException e) {
-			throw new HttpUtilsException("An error occued when execute http post method: " + urlWithArgs);
+			throw new HttpUtilsException("Post to " + urlWithArgs + " error.", e);
 		} finally {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
-				throw new HttpUtilsException("An error occued when close http client.");
+				throw new HttpUtilsException("Close http stream error.", e);
 			}
 		}
 
@@ -232,12 +233,12 @@ public class HttpClientTemplate implements HttpTemplate {
 				if (status >= 200 && status < 300) {
 					HttpEntity entity = response.getEntity();
 					if (entity == null) {
-						throw new ClientProtocolException("Response contains no content");
+						throw new ClientProtocolException("There's no content in http response.");
 					}
 					try {
 						return saveStreamToFile(entity.getContent());
 					} catch (HttpUtilsException e) {
-						throw new IOException("Save file error.");
+						throw new IOException("Save file error.", e);
 					}
 				} else {
 					throw new ClientProtocolException("Unexpected response status: " + status);
@@ -250,12 +251,12 @@ public class HttpClientTemplate implements HttpTemplate {
 		try {
 			downloadFile = httpClient.execute(httpPost, responseHandler);
 		} catch (IOException e) {
-			throw new HttpUtilsException("An error occued when execute http post method: " + urlWithArgs);
+			throw new HttpUtilsException("Download from " + urlWithArgs + " error.", e);
 		} finally {
 			try {
 				httpClient.close();
 			} catch (IOException e) {
-				throw new HttpUtilsException("An error occued when close http client.");
+				throw new HttpUtilsException("Close http stream error.", e);
 			}
 		}
 

@@ -36,7 +36,7 @@ public class MessageCapability extends AbstractCapability implements MessageAbil
 	 * @throws CapabilityException
 	 *             加载"wechat.properties"配置文件失败抛出的异常
 	 */
-	public MessageCapability() throws CapabilityException {
+	public MessageCapability() throws PropertiesException {
 
 	}
 
@@ -47,20 +47,21 @@ public class MessageCapability extends AbstractCapability implements MessageAbil
 	 *            微信公众平台的post请求
 	 * @return 从xml格式的消息（或事件）转换成的MsgType类型的对象，其实际对象类型可通过getMsgType方法获得。
 	 * @throws CapabilityException
-	 *             读取request中的实体信息错误，基于Spring框架的applicationContext_wechat.
-	 *             xml文件内容损坏，解析xml错误，都会引发该异常
+	 *             读取request中的实体信息错误，解析xml错误，都会引发该异常
+	 * @throws NullSaoException
+	 *             applicationContext_wechat.xml文件内容损坏导致读取bean失败
 	 * @see MsgType, BaseMessage, Message, TextMessage, ImageMessage,
 	 *      LinkMessage, LocationMessage, VideoMessage, ShortVideoMessage,
 	 *      VoiceMessage, Event, ClickEvent, LocationEvent, ScanEvent,
 	 *      SubscribeEvent, UnsubscribeEvent, ViewEvent
 	 */
 	@Override
-	public MsgType receiveMessage(HttpServletRequest request) throws CapabilityException {
+	public MsgType receiveMessage(HttpServletRequest request) throws CapabilityException, NullSaoException {
 		String receiveXml = "";
 		try {
 			receiveXml = HttpUtils.readEntityFromStream(request);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Read http entity error.");
+			throw new CapabilityException("Read http entity error.", e);
 		}
 		if (receiveXml.isEmpty()) {
 			receiveXml = request.getParameter("msg");
@@ -68,26 +69,26 @@ public class MessageCapability extends AbstractCapability implements MessageAbil
 
 		XmlSao msgTypeSao = (XmlSao) SpringUtils.getBean("msgTypeSao");
 		if (null == msgTypeSao) {
-			throw new CapabilityException("Get bean msgTypeSao failed, applicationContext-wechat.xml may be damaged.");
+			throw new NullSaoException("Get bean msgTypeSao failed, applicationContext-wechat.xml may be damaged.");
 		}
 
 		MsgType msgType = null;
 		try {
 			msgType = msgTypeSao.get(receiveXml);
 		} catch (SaoException e) {
-			throw new CapabilityException("An error occured when get message type from xml.");
+			throw new CapabilityException("An error occured when get message type from xml.", e);
 		}
 
 		XmlSao sao = (XmlSao) SpringUtils.getBean(msgType.getMsgType());
 		if (null == sao) {
-			throw new CapabilityException("Get bean " + msgType.getMsgType() + " failed, please make sure bean has defined in applicationContext-wechat.xml");
+			throw new NullSaoException("Get bean " + msgType.getMsgType() + " failed, applicationContext-wechat.xml may be damaged.");
 		}
 		MsgType message = null;
 		try {
 			message = sao.get(receiveXml);
 		} catch (SaoException e) {
 			// TODO throw new ServiceException
-			throw new CapabilityException("An error occured when get message from xml.");
+			throw new CapabilityException("An error occured when get message from xml.", e);
 		}
 
 		if (msgType.getMsgType().equals(MsgType.EVENT)) {
@@ -96,14 +97,14 @@ public class MessageCapability extends AbstractCapability implements MessageAbil
 			XmlSao eventSao = (XmlSao) SpringUtils.getBean(beanId);
 
 			if (null == eventSao) {
-				throw new CapabilityException("Get bean " + beanId + " failed, please make sure bean has defined in applicationContext-wechat.xml");
+				throw new NullSaoException("Get bean " + beanId + " failed, applicationContext-wechat.xml may be damaged.");
 			}
 
 			try {
 				return eventSao.get(receiveXml);
 			} catch (SaoException e) {
 				// TODO throw new ServiceException
-				throw new CapabilityException("An error occured when get message from xml.");
+				throw new CapabilityException("An error occured when get event from xml.", e);
 			}
 		} else {
 			return message;
@@ -128,7 +129,7 @@ public class MessageCapability extends AbstractCapability implements MessageAbil
 	@Override
 	public Message executeCommand(Command command, MsgType message) throws CapabilityException {
 		if (null == command) {
-			throw new CapabilityException("command object is null.");
+			throw new CapabilityException("User command object doesn't defined.");
 		}
 
 		Message respMsg = null;
@@ -136,13 +137,13 @@ public class MessageCapability extends AbstractCapability implements MessageAbil
 			try {
 				respMsg = command.processEvent((Event) message);
 			} catch (CommandException e) {
-				throw new CapabilityException("User command raise an exception.");
+				throw new CapabilityException("User command raise an exception.", e);
 			}
 		} else {
 			try {
 				respMsg = command.processMessage((Message) message);
 			} catch (CommandException e) {
-				throw new CapabilityException("User command raise an exception.");
+				throw new CapabilityException("User command raise an exception.", e);
 			}
 		}
 		return respMsg;
@@ -156,21 +157,21 @@ public class MessageCapability extends AbstractCapability implements MessageAbil
 	 * @param message
 	 *            用户的回复消息。
 	 * @throws CapabilityException
-	 *             基于Spring框架的applicationContext_wechat.
-	 *             xml文件内容损坏，解析xml错误，回复消息错误，都会引发该异常
+	 *             生成XML错误，写入response流失败，都会引发该异常
+	 * @throws NullSaoException
+	 *             applicationContext_wechat.xml文件内容损坏导致读取bean失败
 	 * @see MsgType, BaseMessage, Message, TextMessage, ImageMessage,
 	 *      LinkMessage, LocationMessage, VideoMessage, ShortVideoMessage,
 	 *      VoiceMessage
 	 */
 	@Override
-	public void responseMessage(HttpServletResponse response, Message message) throws CapabilityException {
+	public void responseMessage(HttpServletResponse response, Message message) throws CapabilityException, NullSaoException {
 		String responseXml = "success";
 		if (null != message) {
 			try {
 				XmlSao sao = (XmlSao) SpringUtils.getBean(message.getMsgType());
 				if (null == sao) {
-					throw new CapabilityException("Get bean " + message.getMsgType()
-							+ " failed, please make sure bean defined in applicationContext-wechat.xml");
+					throw new NullSaoException("Get bean " + message.getMsgType() + " failed, applicationContext-wechat.xml may be damaged.");
 				}
 				responseXml = sao.save(message);
 
@@ -181,7 +182,7 @@ public class MessageCapability extends AbstractCapability implements MessageAbil
 				 * responseXml);
 				 */
 			} catch (SaoException e) {
-				throw new CapabilityException("An error occured when save message to xml.");
+				throw new CapabilityException("An error occured when save message to xml.", e);
 			}
 		}
 
@@ -190,7 +191,7 @@ public class MessageCapability extends AbstractCapability implements MessageAbil
 			response.getWriter().write(responseXml);
 		} catch (IOException e) {
 			// TODO
-			throw new CapabilityException("Write response message error.");
+			throw new CapabilityException("Write response message error.", e);
 		}
 	}
 

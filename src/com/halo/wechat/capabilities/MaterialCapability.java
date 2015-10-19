@@ -129,7 +129,7 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 	 * @throws CapabilityException
 	 *             加载"wechat.properties"配置文件失败抛出的异常
 	 */
-	public MaterialCapability() throws CapabilityException {
+	public MaterialCapability() throws PropertiesException {
 
 	}
 
@@ -144,13 +144,17 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 	@Override
 	public MaterialCountBean getMaterialCount() throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		args.put("access_token", retrieveAccessToken().getAccess_token());
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
 
 		String resultStr = null;
 		try {
 			resultStr = this.getHttpTemplate().get(GET_MATERIAL_COUNT_URL, args);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Get material count. ");
+			throw new CapabilityException("Get material count failed. ", e);
 		}
 
 		return getJsonBean(new JSONUtils<MaterialCountBean>(MaterialCountBean.class), resultStr);
@@ -166,7 +170,11 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 	@Override
 	public MaterialListBean batchGetMaterial(String type, short offset, short count) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		args.put("access_token", retrieveAccessToken().getAccess_token());
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
 
 		BatchGetCondition batchGetCondition = new BatchGetCondition(type, offset, count);
 		String jsonStr = getJsonStr(new JSONUtils<BatchGetCondition>(BatchGetCondition.class), batchGetCondition);
@@ -174,7 +182,7 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 		try {
 			resultStr = this.getHttpTemplate().post(BATCH_GET_MATERIAL_URL, args, jsonStr, JSON_CONTENT_TYPE);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Batch get material error. ");
+			throw new CapabilityException("Batch get material failed. ", e);
 		}
 
 		return getJsonBean(new JSONUtils<MaterialListBean>(MaterialListBean.class), resultStr);
@@ -191,14 +199,18 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 	@Override
 	public File getMedia(String mediaId) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		args.put("access_token", retrieveAccessToken().getAccess_token());
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
 		args.put("media_id", mediaId);
 
 		File mediaFile = null;
 		try {
 			mediaFile = this.getHttpTemplate().download(GET_MEDIA_URL, args);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Get media file error.");
+			throw new CapabilityException("Get temporary media file failed. ", e);
 		}
 		return mediaFile;
 	}
@@ -219,7 +231,11 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 	@Override
 	public MaterialResultBean getMaterial(String mediaId) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		args.put("access_token", retrieveAccessToken().getAccess_token());
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
 
 		MediaIdBean mediadBean = new MediaIdBean(mediaId);
 		String jsonStr = getJsonStr(new JSONUtils<MediaIdBean>(MediaIdBean.class), mediadBean);
@@ -227,7 +243,7 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 		try {
 			resultStr = this.getHttpTemplate().post(GET_MATERIAL_URL, args, jsonStr, JSON_CONTENT_TYPE);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Get material error. ");
+			throw new CapabilityException("Get permanent material failed. ", e);
 		}
 
 		return getJsonBean(new JSONUtils<MaterialResultBean>(MaterialResultBean.class), resultStr);
@@ -245,7 +261,11 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 	@Override
 	public File downloadMaterial(String mediaId) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		args.put("access_token", retrieveAccessToken().getAccess_token());
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
 
 		MediaIdBean mediadBean = new MediaIdBean(mediaId);
 		String jsonStr = getJsonStr(new JSONUtils<MediaIdBean>(MediaIdBean.class), mediadBean);
@@ -253,7 +273,7 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 		try {
 			materialFile = this.getHttpTemplate().downloadUsePost(GET_MATERIAL_URL, args, jsonStr, JSON_CONTENT_TYPE);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Get material error. ");
+			throw new CapabilityException("Download permanent material file failed. ", e);
 		}
 
 		return materialFile;

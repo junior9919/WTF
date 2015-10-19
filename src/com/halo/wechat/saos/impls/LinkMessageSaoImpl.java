@@ -15,12 +15,6 @@ import com.halo.wechat.saos.SaoException;
  */
 public class LinkMessageSaoImpl extends AbstractMessageSaoImpl {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.halo.wechat.saos.impls.AbstractMessageSaoImpl#get(java.lang.String)
-	 */
 	@Override
 	public MsgType get(String xmlContent) throws SaoException {
 		return getByClass(LinkMessage.class, xmlContent);

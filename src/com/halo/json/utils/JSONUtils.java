@@ -11,7 +11,7 @@ public class JSONUtils<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public T getJsonBean(String jsonStr) throws JSONUtilsException {
+	public T getJsonBean(String jsonStr) {
 		JSONObject jsonObj = JSONObject.fromObject(jsonStr);
 		return (T) JSONObject.toBean(jsonObj, this.clazz);
 	}

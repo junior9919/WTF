@@ -33,7 +33,7 @@ public class CustomMenuCapability extends AccessSupportCapability implements Cus
 	 * @throws CapabilityException
 	 *             加载"wechat.properties"配置文件失败抛出的异常
 	 */
-	public CustomMenuCapability() throws CapabilityException {
+	public CustomMenuCapability() throws PropertiesException {
 
 	}
 
@@ -51,14 +51,18 @@ public class CustomMenuCapability extends AccessSupportCapability implements Cus
 	@Override
 	public ResultBean createMenu(MenuBean menu) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		args.put("access_token", retrieveAccessToken().getAccess_token());
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
 
 		String jsonStr = getJsonStr(new JSONUtils<MenuBean>(MenuBean.class), menu);
 		String resultStr = null;
 		try {
 			resultStr = this.getHttpTemplate().post(CREATE_MENU_URL, args, jsonStr, JSON_CONTENT_TYPE);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Create menu error. ");
+			throw new CapabilityException("Create menu failed.", e);
 		}
 
 		return getJsonBean(new JSONUtils<ResultBean>(ResultBean.class), resultStr);
@@ -75,13 +79,17 @@ public class CustomMenuCapability extends AccessSupportCapability implements Cus
 	@Override
 	public MenuResultBean getMenu() throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		args.put("access_token", retrieveAccessToken().getAccess_token());
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
 
 		String resultStr = null;
 		try {
 			resultStr = this.getHttpTemplate().get(GET_MENU_URL, args);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Get menu error. ");
+			throw new CapabilityException("Get menu failed.", e);
 		}
 
 		return getJsonBean(new JSONUtils<MenuResultBean>(MenuResultBean.class), resultStr);
@@ -98,13 +106,17 @@ public class CustomMenuCapability extends AccessSupportCapability implements Cus
 	@Override
 	public ResultBean deleteMenu() throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		args.put("access_token", retrieveAccessToken().getAccess_token());
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
 
 		String resultStr = null;
 		try {
 			resultStr = this.getHttpTemplate().get(DELETE_MENU_URL, args);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Create menu error. ");
+			throw new CapabilityException("Delete menu failed.", e);
 		}
 
 		return getJsonBean(new JSONUtils<ResultBean>(ResultBean.class), resultStr);

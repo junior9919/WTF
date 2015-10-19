@@ -39,16 +39,12 @@ public class SecurityCapability extends AbstractCapability implements SecurityAb
 			return false;
 		}
 
-		try {
-			resultBean = getJsonBean(new JSONUtils<ResultBean>(ResultBean.class), resultStr);
-		} catch (CapabilityException e) {
-			return false;
-		}
+		resultBean = getJsonBean(new JSONUtils<ResultBean>(ResultBean.class), resultStr);
 
 		return null != resultBean ? 1 == resultBean.getErrcode() : false;
 	}
 
-	public SecurityCapability() throws CapabilityException {
+	public SecurityCapability() throws PropertiesException {
 
 	}
 
@@ -68,7 +64,11 @@ public class SecurityCapability extends AbstractCapability implements SecurityAb
 						long msgId = rand.nextLong();
 						TextMessage responseMessage = new TextMessage(message.getToUserName(), message.getFromUserName(), System.currentTimeMillis(),
 								MsgType.TEXT, content, msgId);
-						messageCapability.responseMessage(response, responseMessage);
+						try {
+							messageCapability.responseMessage(response, responseMessage);
+						} catch (NullSaoException e) {
+							throw new CapabilityException("Response message caught an error.", e);
+						}
 					}
 				}
 				throw new CapabilityException("User response message canceled.");

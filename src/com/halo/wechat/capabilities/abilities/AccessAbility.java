@@ -13,7 +13,8 @@ public interface AccessAbility {
 	 * @return 
 	 *         AccessTokenBean对象，对象属性中包含了接口调用凭据（access_token），凭证有效时间（expires_in）等信息
 	 * @throws CapabilityException
-	 *             从ServletContext中读写AccessTokenBean、请求服务器失败都会引发异常
+	 *             从ServletContext中读写AccessTokenBean失败、请求AccessToken失败、
+	 *             读参数失败引发的异常
 	 * @see AccessTokenBean
 	 */
 	public AccessTokenBean getAccessToken() throws CapabilityException;
@@ -23,7 +24,7 @@ public interface AccessAbility {
 	 * 
 	 * @return ServerAddrBean对象，对象属性中包含服务器IP地址列表信息
 	 * @throws CapabilityException
-	 *             请求服务器失败会引发本异常
+	 *             从ServletContext中读写AccessTokenBean、请求服务器地址失败引发的异常
 	 */
 	public ServerAddrBean getServerAddr() throws CapabilityException;
 

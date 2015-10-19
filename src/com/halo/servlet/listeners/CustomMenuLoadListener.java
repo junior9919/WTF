@@ -12,7 +12,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import com.halo.json.utils.JSONUtils;
-import com.halo.json.utils.JSONUtilsException;
 import com.halo.spring.utils.SpringUtils;
 import com.halo.wechat.capabilities.CapabilityException;
 import com.halo.wechat.capabilities.abilities.CustomMenuAbility;
@@ -66,7 +65,7 @@ public class CustomMenuLoadListener implements ServletContextListener {
 	private File getMenuFile(String menuFileName) {
 		File file = new File(menuFileName);
 		if (!file.exists()) {
-			appLogger.getLogger().error(file.getPath() + " does not exist.");
+			appLogger.getLogger().error(file.getPath() + " doesn't exist.");
 			return null;
 		}
 		return file;
@@ -112,13 +111,8 @@ public class CustomMenuLoadListener implements ServletContextListener {
 
 	private boolean createMenu(String menuJson, CustomMenuAbility customMenuAbility) {
 		JSONUtils<MenuBean> jsonUtils = new JSONUtils<MenuBean>(MenuBean.class);
-		MenuBean menu = null;
-		try {
-			menu = jsonUtils.getJsonBean(menuJson);
-		} catch (JSONUtilsException e) {
-			appLogger.getLogger().error(e.getMessage());
-			return false;
-		}
+		MenuBean menu = jsonUtils.getJsonBean(menuJson);
+		
 		if (null != menu) {
 			ResultBean resultBean = null;
 			try {

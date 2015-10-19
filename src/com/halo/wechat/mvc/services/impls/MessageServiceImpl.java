@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.halo.spring.utils.SpringUtils;
 import com.halo.wechat.capabilities.CapabilityException;
+import com.halo.wechat.capabilities.NullSaoException;
 import com.halo.wechat.capabilities.abilities.MessageAbility;
 import com.halo.wechat.capabilities.abilities.SignatureAbility;
 import com.halo.wechat.messages.Message;
@@ -54,21 +55,21 @@ public class MessageServiceImpl implements MessageService {
 		MsgType receiveMessage = null;
 		try {
 			receiveMessage = messageAbility.receiveMessage(request);
-		} catch (CapabilityException e) {
-			throw new ServiceException("An error occured when receive message, see log in " + messageAbility.getClass().getName());
+		} catch (CapabilityException | NullSaoException e) {
+			throw new ServiceException("An error occured when receive message. ", e);
 		}
 
 		Message responseMessage = null;
 		try {
 			responseMessage = messageAbility.executeCommand(command, receiveMessage);
 		} catch (CapabilityException e) {
-			throw new ServiceException("An error occured when execute user command, see log in " + messageAbility.getClass().getName());
+			throw new ServiceException("An error occured when execute user command. ", e);
 		}
 
 		try {
 			messageAbility.responseMessage(response, responseMessage);
-		} catch (CapabilityException e) {
-			throw new ServiceException("An error occured when write response message, see log in " + messageAbility.getClass().getName());
+		} catch (CapabilityException | NullSaoException e) {
+			throw new ServiceException("An error occured when write response message. ", e);
 		}
 	}
 

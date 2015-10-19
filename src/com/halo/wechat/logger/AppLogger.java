@@ -69,12 +69,7 @@ public class AppLogger {
 	}
 
 	public void afterThrowing(Throwable e) {
-		logger.error("Method raise an exception:");
-		logger.error("Message: " + e.getMessage());
-		Throwable cause = e.getCause();
-		if (null != cause) {
-			logger.error("Caused by: " + cause.getMessage());
-		}
+		logger.error(e.getMessage(), e);
 	}
 
 	public void logBeforeHandleRequest(JoinPoint jp) {

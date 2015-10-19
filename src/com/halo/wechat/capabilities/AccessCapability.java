@@ -7,7 +7,7 @@ import java.util.Map;
 import com.halo.http.utils.HttpUtilsException;
 import com.halo.json.utils.JSONUtils;
 import com.halo.spring.utils.SpringUtils;
-import com.halo.spring.utils.SpringUtilsException;
+import com.halo.spring.utils.NullWebApplicationContextException;
 import com.halo.wechat.capabilities.abilities.AccessAbility;
 import com.halo.wechat.capabilities.beans.AccessTokenBean;
 import com.halo.wechat.capabilities.beans.ServerAddrBean;
@@ -47,7 +47,7 @@ public class AccessCapability extends AbstractCapability implements AccessAbilit
 	 * @throws CapabilityException
 	 *             加载"wechat.properties"配置文件失败抛出的异常
 	 */
-	public AccessCapability() throws CapabilityException {
+	public AccessCapability() throws PropertiesException {
 
 	}
 
@@ -55,10 +55,10 @@ public class AccessCapability extends AbstractCapability implements AccessAbilit
 	 * 从参数文件中获取微信公众号的app_id，如果抛出异常则需检查配置文件中的app_id参数是否正确配置
 	 * 
 	 * @return 微信公众号的app_id
-	 * @throws CapabilityException
+	 * @throws UndefinedPropertyException
 	 *             app_id参数在配置文件中不存在，或未设置值。
 	 */
-	public String getAppId() throws CapabilityException {
+	public String getAppId() throws UndefinedPropertyException {
 		return getProperty(APP_ID_NAME);
 	}
 
@@ -66,10 +66,10 @@ public class AccessCapability extends AbstractCapability implements AccessAbilit
 	 * 从参数文件中获取微信公众号的app_secret，如果抛出异常则需检查配置文件中的app_secret参数是否正确配置
 	 * 
 	 * @return 微信公众号的app_secret
-	 * @throws CapabilityException
+	 * @throws UndefinedPropertyException
 	 *             app_secret参数在配置文件中不存在，或未设置值。
 	 */
-	public String getAppSecret() throws CapabilityException {
+	public String getAppSecret() throws UndefinedPropertyException {
 		return getProperty(APP_SECRET_NAME);
 	}
 
@@ -80,7 +80,7 @@ public class AccessCapability extends AbstractCapability implements AccessAbilit
 	 * @return 
 	 *         AccessTokenBean对象，对象属性中包含了接口调用凭据（access_token），凭证有效时间（expires_in）等信息
 	 * @throws CapabilityException
-	 *             从ServletContext中读写AccessTokenBean、请求服务器失败都会引发异常
+	 *             从ServletContext中读写AccessTokenBean失败、请求AccessToken失败、读参数失败引发的异常
 	 * @see AccessTokenBean
 	 */
 	@Override
@@ -88,19 +88,24 @@ public class AccessCapability extends AbstractCapability implements AccessAbilit
 		AccessTokenBean accessTokenBean;
 		try {
 			accessTokenBean = (AccessTokenBean) SpringUtils.getFromServletContext(AccessTokenBean.class.getName());
-		} catch (SpringUtilsException e) {
-			throw new CapabilityException("Get access token from application context error: " + e.getMessage());
+		} catch (NullWebApplicationContextException e) {
+			throw new CapabilityException("Get access token from application context failed.", e);
 		}
 		if (null == accessTokenBean || isAccessTokenExpired(accessTokenBean)) {
 			Map<String, String> args = new HashMap<String, String>();
 			args.put("grant_type", "client_credential");
-			args.put("appid", getAppId());
-			args.put("secret", getAppSecret());
+			try {
+				args.put("appid", getAppId());
+				args.put("secret", getAppSecret());
+			} catch (UndefinedPropertyException e) {
+				throw new CapabilityException("Get property error.", e);
+			}
+
 			String resultStr = null;
 			try {
 				resultStr = this.getHttpTemplate().get(GET_ACCESS_TOKEN_URL, args);
 			} catch (HttpUtilsException e) {
-				throw new CapabilityException("Get access token error. ");
+				throw new CapabilityException("Get access token failed. ", e);
 			}
 
 			accessTokenBean = getJsonBean(new JSONUtils<AccessTokenBean>(AccessTokenBean.class), resultStr);
@@ -110,8 +115,8 @@ public class AccessCapability extends AbstractCapability implements AccessAbilit
 
 			try {
 				SpringUtils.addIntoServletContext(accessTokenBean.getClass().getName(), accessTokenBean);
-			} catch (SpringUtilsException e) {
-				throw new CapabilityException("Add access token into servlet context error: " + e.getMessage());
+			} catch (NullWebApplicationContextException e) {
+				throw new CapabilityException("Add access token into servlet context failed.", e);
 			}
 		}
 		return accessTokenBean;
@@ -122,7 +127,7 @@ public class AccessCapability extends AbstractCapability implements AccessAbilit
 	 * 
 	 * @return ServerAddrBean对象，对象属性中包含服务器IP地址列表信息
 	 * @throws CapabilityException
-	 *             从ServletContext中读写AccessTokenBean、请求服务器失败会引发本异常
+	 *             从ServletContext中读写AccessTokenBean、请求服务器地址失败引发的异常
 	 * @see ServerAddrBean
 	 */
 	@Override
@@ -133,7 +138,7 @@ public class AccessCapability extends AbstractCapability implements AccessAbilit
 		try {
 			resultStr = this.getHttpTemplate().get(GET_IP_LIST_URL, args);
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Get server ip list error. ");
+			throw new CapabilityException("Get server ip list error. ", e);
 		}
 
 		return getJsonBean(new JSONUtils<ServerAddrBean>(ServerAddrBean.class), resultStr);

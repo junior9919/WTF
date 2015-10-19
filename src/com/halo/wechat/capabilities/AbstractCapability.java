@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import com.halo.http.utils.HttpTemplate;
 import com.halo.json.utils.JSONUtils;
-import com.halo.json.utils.JSONUtilsException;
 
 /**
  * 微信能力接口抽象类，实际上本类中没有一个抽象方法。本类实现了所有微信能力接口的共用方法，可以当作是微信能力接口类的工具类。
@@ -61,13 +60,10 @@ public abstract class AbstractCapability {
 	 * 
 	 * @throws CapabilityException
 	 *             加载"wechat.properties"配置文件失败抛出的异常
+	 * @throws PropertiesException
 	 */
-	public AbstractCapability() throws CapabilityException {
-		try {
-			properties = WechatProperties.getInstance();
-		} catch (PropertiesException e) {
-			throw new CapabilityException("Instantiate capability object error: " + e.getMessage());
-		}
+	public AbstractCapability() throws PropertiesException {
+		properties = WechatProperties.getInstance();
 	}
 
 	/**
@@ -76,13 +72,13 @@ public abstract class AbstractCapability {
 	 * @param propertyName
 	 *            参数名，系统默认的微信客户端参数有：app_id、app_secret、token；用户也可以在配置文件中声明自己的参数。
 	 * @return String类型的参数值
-	 * @throws CapabilityException
+	 * @throws UndefinedPropertyException
 	 *             参数名在配置文件中不存在，将抛出异常。此时应当检查配置文件是否损坏或参数名是否与配置文件中一致
 	 */
-	public String getProperty(String propertyName) throws CapabilityException {
+	public String getProperty(String propertyName) throws UndefinedPropertyException {
 		String propertyValue = getProperties().getProperty(propertyName);
 		if (null == propertyValue) {
-			throw new CapabilityException("Missing " + propertyName + " in " + WECHAT_PROPERTIES_FILE_NAME + ", please make sure property has been set.");
+			throw new UndefinedPropertyException(propertyName + " doesn't defined in " + WECHAT_PROPERTIES_FILE_NAME);
 		}
 		return propertyValue;
 	}
@@ -95,18 +91,9 @@ public abstract class AbstractCapability {
 	 * @param jsonStr
 	 *            要解析的json字符串
 	 * @return 解析后的对象，类型由JSONUtils的泛型指定
-	 * @throws CapabilityException
-	 *             解析过程中发生错误抛出的异常
 	 */
-	public <T> T getJsonBean(JSONUtils<T> jsonUtils, String jsonStr) throws CapabilityException {
-		T bean = null;
-		try {
-			bean = jsonUtils.getJsonBean(jsonStr);
-		} catch (JSONUtilsException e) {
-			throw new CapabilityException("Parse result error with json string: " + jsonStr);
-		}
-
-		return bean;
+	public <T> T getJsonBean(JSONUtils<T> jsonUtils, String jsonStr) {
+		return jsonUtils.getJsonBean(jsonStr);
 	}
 
 	/**
