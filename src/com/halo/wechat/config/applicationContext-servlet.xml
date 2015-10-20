@@ -26,17 +26,13 @@
 				expression="execution(* com.halo.wechat.mvc.services.impls.MessageServiceImpl.checkSignature(..))" />
 			<aop:before pointcut-ref="serviceCheckSignature" method="logBeforeServiceCheckSignature" />
 			<aop:after pointcut-ref="serviceCheckSignature" method="afterMethod" />
-			<aop:after-throwing pointcut-ref="serviceCheckSignature"
-				method="afterThrowing" throwing="e" />
 			<aop:pointcut id="serviceProcessMessage"
 				expression="execution(* com.halo.wechat.mvc.services.impls.MessageServiceImpl.processMessage(..))" />
 			<aop:before pointcut-ref="serviceProcessMessage" method="logBeforeServiceProcessMessage" />
 			<aop:after pointcut-ref="serviceProcessMessage" method="afterMethod" />
-			<aop:after-throwing pointcut-ref="serviceProcessMessage"
-				method="afterThrowing" throwing="e" />
 			<!-- 执行用户命令对象方法的切点 -->
 			<aop:pointcut id="commandMethod"
-				expression="execution(* com.user.wechat.mvc.commands.UserCommand.*(..)) and args(..)" />
+				expression="execution(* com.*.wechat.mvc.commands.*.*(..)) and args(..)" />
 			<aop:before pointcut-ref="commandMethod" method="logBeforeCommandProcess" />
 			<aop:after pointcut-ref="commandMethod" method="afterMethod" />
 			<aop:after-throwing pointcut-ref="commandMethod"

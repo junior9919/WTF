@@ -93,34 +93,24 @@
 				expression="execution(* com.halo.wechat.saos.XmlSao.*(..)) and args(..)" />
 			<aop:before pointcut-ref="saoMethod" method="beforeMethod" />
 			<aop:after pointcut-ref="saoMethod" method="afterMethod" />
-			<aop:after-throwing pointcut-ref="saoMethod"
-				method="afterThrowing" throwing="e" />
 			<!-- 工具类方法切点 -->
 			<aop:pointcut id="domTemplateGet"
 				expression="execution(* com.halo.wechat.xml.utils.DomTemplate.get(..))" />
 			<aop:before pointcut-ref="domTemplateGet" method="logBeforeDomTemplateGet" />
 			<aop:after pointcut-ref="domTemplateGet" method="afterMethod" />
-			<aop:after-throwing pointcut-ref="domTemplateGet"
-				method="afterThrowing" throwing="e" />
 			<aop:pointcut id="springUtilsMethod"
 				expression="execution(* com.halo.spring.utils.*.*(..)) and args(..)" />
 			<aop:before pointcut-ref="springUtilsMethod" method="beforeMethod" />
 			<aop:after pointcut-ref="springUtilsMethod" method="afterMethod" />
-			<aop:after-throwing pointcut-ref="springUtilsMethod"
-				method="afterThrowing" throwing="e" />
 			<aop:pointcut id="httpUtilsMethod"
 				expression="execution(* com.halo.http.utils.*.*(..)) and args(..)" />
 			<aop:before pointcut-ref="httpUtilsMethod" method="beforeMethod" />
 			<aop:after pointcut-ref="httpUtilsMethod" method="afterMethod" />
-			<aop:after-throwing pointcut-ref="httpUtilsMethod"
-				method="afterThrowing" throwing="e" />
 			<!-- 微信能力接口类方法切点 -->
 			<aop:pointcut id="abilityMethod"
 				expression="execution(* com.halo.wechat.capabilities.abilities.*.*(..)) and args(..)" />
 			<aop:before pointcut-ref="abilityMethod" method="beforeMethod" />
 			<aop:after pointcut-ref="abilityMethod" method="afterMethod" />
-			<aop:after-throwing pointcut-ref="abilityMethod"
-				method="afterThrowing" throwing="e" />
 			<aop:pointcut id="signatureEncode"
 				expression="execution(* com.halo.wechat.capabilities.SignatureCapability.encodeParameters(..))" />
 			<aop:before pointcut-ref="signatureEncode" method="logBeforeSignatureEncode" />

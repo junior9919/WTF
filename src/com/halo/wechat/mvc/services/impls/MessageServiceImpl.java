@@ -41,7 +41,7 @@ public class MessageServiceImpl implements MessageService {
 		try {
 			signatureAbility.checkSignature(request, response);
 		} catch (CapabilityException e) {
-			throw new ServiceException("An error occured when check signature, see log in " + signatureAbility.getClass().getName());
+			throw new ServiceException("Check signature failed.", e);
 		}
 	}
 
@@ -56,20 +56,20 @@ public class MessageServiceImpl implements MessageService {
 		try {
 			receiveMessage = messageAbility.receiveMessage(request);
 		} catch (CapabilityException | NullSaoException e) {
-			throw new ServiceException("An error occured when receive message. ", e);
+			throw new ServiceException("Receive message process failed. ", e);
 		}
 
 		Message responseMessage = null;
 		try {
 			responseMessage = messageAbility.executeCommand(command, receiveMessage);
 		} catch (CapabilityException e) {
-			throw new ServiceException("An error occured when execute user command. ", e);
+			throw new ServiceException("Execute user command failed. ", e);
 		}
 
 		try {
 			messageAbility.responseMessage(response, responseMessage);
 		} catch (CapabilityException | NullSaoException e) {
-			throw new ServiceException("An error occured when write response message. ", e);
+			throw new ServiceException("Response message failed. ", e);
 		}
 	}
 

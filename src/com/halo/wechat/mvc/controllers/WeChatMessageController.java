@@ -46,20 +46,20 @@ public class WeChatMessageController {
 				try {
 					messageService.processMessage(arg0, arg1);
 				} catch (ServiceException e) {
-					throw new ControllerException("An error occured when process message. ", e);
+					throw new ControllerException("Process message service exception. ", e);
 				}
 			} else {
 				try {
 					messageService.checkSignature(arg0, arg1);
 				} catch (ServiceException e) {
-					throw new ControllerException("An error occured when check signature. ", e);
+					throw new ControllerException("Check signature service exception. ", e);
 				}
 			}
 		} else {
 			try {
 				messageService.processMessage(arg0, arg1);
 			} catch (ServiceException e) {
-				throw new ControllerException("An error occured when process message. ", e);
+				throw new ControllerException("Process message service exception. ", e);
 			}
 		}
 	}
