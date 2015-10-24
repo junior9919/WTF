@@ -36,7 +36,7 @@ public class SecurityCapability extends AbstractCapability implements SecurityAb
 		try {
 			resultStr = this.getHttpTemplate().get(CHECK_SUBSCRIBER_URL, args);
 		} catch (HttpUtilsException e) {
-			return false;
+			return true;
 		}
 
 		resultBean = getJsonBean(new JSONUtils<ResultBean>(ResultBean.class), resultStr);

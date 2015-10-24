@@ -14,11 +14,12 @@ public class CommandException extends Exception {
 
 	private static final long serialVersionUID = -9112433239365559192L;
 
-	/**
-	 * @param message
-	 */
 	public CommandException(String message) {
 		super(message);
+	}
+
+	public CommandException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }
