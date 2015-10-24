@@ -13,8 +13,8 @@ import com.halo.wechat.mvc.services.ServiceException;
 /**
  * 拦截微信公众平台推送消息或事件的主控制器（Controller），本控制器由Spring框架自动配置和管理，实现对所有微信消息和事件的拦截和后续处理。<br>
  * 本控制器拦截的相对URL为"/send.do"，因此用户需在微信公众平台上配置服务器地址：http://网站根路径/send.do；<br>
- * 例如，您的网站根路径假设为：http://182.92.155.180/wechat；那么您在微信公众平台上配置的服务器地址应为：http://
- * 182.92.155.180/wechat/send.do
+ * 例如，您的网站根路径假设为：http://182.92.155.180/wechat；那么您在微信公众平台上配置的服务器地址应为：<br>
+ * http://182.92.155.180/wechat/send.do
  * 
  * @author Junior
  * @date 2015年9月10日 下午10:59:57
@@ -46,20 +46,20 @@ public class WeChatMessageController {
 				try {
 					messageService.processMessage(arg0, arg1);
 				} catch (ServiceException e) {
-					throw new ControllerException("Process message service exception. ", e);
+					throw new ControllerException("Process message exception. ");
 				}
 			} else {
 				try {
 					messageService.checkSignature(arg0, arg1);
 				} catch (ServiceException e) {
-					throw new ControllerException("Check signature service exception. ", e);
+					throw new ControllerException("Check signature exception. ");
 				}
 			}
 		} else {
 			try {
 				messageService.processMessage(arg0, arg1);
 			} catch (ServiceException e) {
-				throw new ControllerException("Process message service exception. ", e);
+				throw new ControllerException("Process message exception. ");
 			}
 		}
 	}

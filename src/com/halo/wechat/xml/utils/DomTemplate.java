@@ -51,18 +51,31 @@ public class DomTemplate implements XmlTemplate {
 
 	/**
 	 * 
-	 * @param stream
+	 * @param xmlContent
 	 * @throws XmlParseException
 	 */
 	public void parseDocument(String xmlContent) throws XmlParseException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
+		DocumentBuilder builder = null;
+
 		try {
 			builder = factory.newDocumentBuilder();
-			document = builder.parse(new ByteArrayInputStream(xmlContent.getBytes()));
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			throw new XmlParseException("Parse XML document error. ", e);
+		} catch (ParserConfigurationException e) {
+			throw new XmlParseException("Get XML document builder failed. ", e);
 		}
+
+		if (null == builder) {
+			throw new XmlParseException("XML document builder is null. ");
+		}
+
+		try {
+			document = builder.parse(new ByteArrayInputStream(xmlContent.getBytes()));
+		} catch (SAXException e) {
+			throw new XmlParseException("Parse XML failed. \r\n" + xmlContent, e);
+		} catch (IOException e) {
+			throw new XmlParseException("Read XML stream failed. ", e);
+		}
+
 	}
 
 	/**
