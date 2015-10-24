@@ -55,27 +55,24 @@ public class HttpClientTemplate implements HttpTemplate {
 		OutputStream outputStream = null;
 		try {
 			outputStream = new FileOutputStream(downloadFile);
-		} catch (FileNotFoundException e) {
-			throw new HttpUtilsException("Can't create a FileOutputStream.", e);
-		}
 
-		int size = 0;
-		byte[] bytes = new byte[1024];
-		BufferedInputStream bufferedInputStream = new BufferedInputStream(stream);
-
-		try {
+			int size = 0;
+			byte[] bytes = new byte[1024];
+			BufferedInputStream bufferedInputStream = new BufferedInputStream(stream);
 			while ((size = bufferedInputStream.read(bytes)) != -1) {
 				outputStream.write(bytes, 0, size);
 			}
+		} catch (FileNotFoundException e) {
+			throw new HttpUtilsException("Can't create a FileOutputStream.", e);
 		} catch (IOException e) {
 			throw new HttpUtilsException("Can't read from input stream or write to output stream.", e);
-		}
-
-		try {
-			outputStream.flush();
-			outputStream.close();
-		} catch (IOException e) {
-			throw new HttpUtilsException("Close stream error.", e);
+		} finally {
+			try {
+				outputStream.flush();
+				outputStream.close();
+			} catch (IOException e) {
+				throw new HttpUtilsException("Close stream error.", e);
+			}
 		}
 
 		return downloadFile;
