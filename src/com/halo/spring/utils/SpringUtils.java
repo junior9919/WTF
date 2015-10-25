@@ -2,7 +2,8 @@ package com.halo.spring.utils;
 
 import java.util.Locale;
 
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import javax.servlet.ServletContext;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.web.context.ContextLoader;
@@ -21,23 +22,18 @@ public class SpringUtils implements ApplicationContextAware {
 
 	private static ApplicationContext applicationContext;
 
-	public static void loadWebApplicationContext() throws NullWebApplicationContextException {
+	public static void loadWebApplicationContext() {
 		if (null == webApplicationContext) {
 			webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
 		}
 		if (null == webApplicationContext) {
-			throw new NullWebApplicationContextException(
+			throw new NullApplicationContextException(
 					"Spring WebApplicationContext is null, please check web.xml make sure ContextLoaderListener configuration is correct.");
 		}
 	}
 
 	public static WebApplicationContext getWebApplicationContext() {
-		try {
-			loadWebApplicationContext();
-		} catch (NullWebApplicationContextException e) {
-			return null;
-		}
-
+		loadWebApplicationContext();
 		return webApplicationContext;
 	}
 
@@ -52,43 +48,42 @@ public class SpringUtils implements ApplicationContextAware {
 		applicationContext = arg0;
 	}
 
-	public static Object getServletBean(String servletName, String beanId) throws NullWebApplicationContextException {
-		ApplicationContext servletApplicationContext = (ApplicationContext) getFromServletContext(FrameworkServlet.class.getName() + ".CONTEXT." + servletName);
-		Object bean = null;
-		try {
-			bean = servletApplicationContext.getBean(beanId);
-		} catch (NoSuchBeanDefinitionException e) {
-			bean = null;
+	public static Object getServletBean(String servletName, String beanId) {
+		String attrId = FrameworkServlet.class.getName() + ".CONTEXT." + servletName;
+		ApplicationContext servletApplicationContext = (ApplicationContext) getFromServletContext(attrId);
+		if (null == servletApplicationContext) {
+			throw new NullApplicationContextException("Servlet application context " + attrId + " is null.");
 		}
-		return bean;
+		return servletApplicationContext.getBean(beanId);
 	}
 
 	public static Object getBean(String beanId) {
-		Object bean = null;
-		try {
-			bean = applicationContext.getBean(beanId);
-		} catch (NoSuchBeanDefinitionException e) {
-			bean = null;
+		if (null == applicationContext) {
+			throw new NullApplicationContextException("Application context is null.");
 		}
-		return bean;
+		return applicationContext.getBean(beanId);
 	}
 
-	public static void addIntoServletContext(String attrId, Object toAdd) throws NullWebApplicationContextException {
+	public static void addIntoServletContext(String attrId, Object toAdd) throws NullApplicationContextException {
 		loadWebApplicationContext();
-		webApplicationContext.getServletContext().setAttribute(attrId, toAdd);
+		ServletContext servletContext = webApplicationContext.getServletContext();
+		if (null == servletContext) {
+			throw new NullApplicationContextException("Servlet context in web application context is null.");
+		}
+		servletContext.setAttribute(attrId, toAdd);
 	}
 
-	public static Object getFromServletContext(String attrId) throws NullWebApplicationContextException {
+	public static Object getFromServletContext(String attrId) {
 		loadWebApplicationContext();
-		return webApplicationContext.getServletContext().getAttribute(attrId);
+		ServletContext servletContext = webApplicationContext.getServletContext();
+		if (null == servletContext) {
+			throw new NullApplicationContextException("Servlet context in web application context is null.");
+		}
+		return servletContext.getAttribute(attrId);
 	}
 
 	public static String getMessage(String code, Object[] args) {
-		try {
-			loadWebApplicationContext();
-		} catch (NullWebApplicationContextException e) {
-			return "";
-		}
+		loadWebApplicationContext();
 		return webApplicationContext.getMessage(code, args, Locale.getDefault());
 	}
 

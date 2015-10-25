@@ -6,8 +6,8 @@ import java.util.Map;
 
 import com.halo.http.utils.HttpUtilsException;
 import com.halo.json.utils.JSONUtils;
+import com.halo.spring.utils.NullApplicationContextException;
 import com.halo.spring.utils.SpringUtils;
-import com.halo.spring.utils.NullWebApplicationContextException;
 import com.halo.wechat.capabilities.abilities.AccessAbility;
 import com.halo.wechat.capabilities.beans.AccessTokenBean;
 import com.halo.wechat.capabilities.beans.ServerAddrBean;
@@ -80,7 +80,8 @@ public class AccessCapability extends AbstractCapability implements AccessAbilit
 	 * @return 
 	 *         AccessTokenBean对象，对象属性中包含了接口调用凭据（access_token），凭证有效时间（expires_in）等信息
 	 * @throws CapabilityException
-	 *             从ServletContext中读写AccessTokenBean失败、请求AccessToken失败、读参数失败引发的异常
+	 *             从ServletContext中读写AccessTokenBean失败、请求AccessToken失败、
+	 *             读参数失败引发的异常
 	 * @see AccessTokenBean
 	 */
 	@Override
@@ -88,7 +89,7 @@ public class AccessCapability extends AbstractCapability implements AccessAbilit
 		AccessTokenBean accessTokenBean;
 		try {
 			accessTokenBean = (AccessTokenBean) SpringUtils.getFromServletContext(AccessTokenBean.class.getName());
-		} catch (NullWebApplicationContextException e) {
+		} catch (NullApplicationContextException e) {
 			throw new CapabilityException("Get access token from application context failed.", e);
 		}
 		if (null == accessTokenBean || isAccessTokenExpired(accessTokenBean)) {
@@ -115,7 +116,7 @@ public class AccessCapability extends AbstractCapability implements AccessAbilit
 
 			try {
 				SpringUtils.addIntoServletContext(accessTokenBean.getClass().getName(), accessTokenBean);
-			} catch (NullWebApplicationContextException e) {
+			} catch (NullApplicationContextException e) {
 				throw new CapabilityException("Add access token into servlet context failed.", e);
 			}
 		}
