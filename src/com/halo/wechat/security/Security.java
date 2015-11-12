@@ -37,8 +37,8 @@ public class Security {
 					MessageCapability messageCapability = (MessageCapability) jp.getTarget();
 					if (args[0] instanceof HttpServletResponse) {
 						HttpServletResponse response = (HttpServletResponse) args[0];
-						String content = "时间就是金钱，我的朋友！\r\n" + "开发这款地精科技产品我们可是花了不少时间！\r\n" + "关注我们的微信号，我保证你就再也听不到这些的唠叨。\r\n\r\n"
-								+ "<a href='http://115.159.67.204/Halo/images/subscribe.jpg'>点击这里关注我们的微信号</a>";
+						String content = "时间就是金钱，我的朋友！\n" + "开发这款地精科技产品我们可是花了不少时间！\n" + "关注我们的微信号吧，我保证你就再也听不到这些的唠叨。\n\n"
+								+ "<a href='http://115.159.67.204/WeChat/images/image001.jpg'>点击这里关注我们的微信号</a>";
 						Random rand = new Random();
 						long msgId = rand.nextLong();
 						TextMessage responseMessage = new TextMessage(message.getToUserName(), message.getFromUserName(), System.currentTimeMillis(),

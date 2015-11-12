@@ -122,7 +122,7 @@ public class CustomMenuLoadListener implements ServletContextListener {
 				return false;
 			}
 			if (null != resultBean) {
-				appLogger.getLogger().info("Delete menu request return: " + String.valueOf(resultBean.getErrcode()) + "|" + resultBean.getErrmsg());
+				appLogger.getLogger().info("Create menu request return: " + String.valueOf(resultBean.getErrcode()) + "|" + resultBean.getErrmsg());
 				return 0 == resultBean.getErrcode();
 			} else {
 				return false;

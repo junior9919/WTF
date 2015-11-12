@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="WeChat/build/jars/halo-wechat-utils-1.0.jar"/>
-    <options buildIfNeeded="true" compress="false" descriptionLocation="/WeChat/halo-wechat-utils.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <jar path="/home/zyl/code/javawork/CommonLibrary/wtf-1.0/halo-wechat-utils-1.0.jar"/>
+    <options buildIfNeeded="true" compress="false" descriptionLocation="/WTF/halo-wechat-utils.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
     <manifest generateManifest="true" manifestLocation="/WeChat/halo-wechat-core-abilities.manifest" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
@@ -11,10 +11,10 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
-        <javaElement handleIdentifier="=WeChat/src&lt;com.halo.wechat.xml.utils"/>
-        <javaElement handleIdentifier="=WeChat/src&lt;com.halo.wechat.logger"/>
-        <javaElement handleIdentifier="=WeChat/src&lt;com.halo.wechat.security"/>
-        <javaElement handleIdentifier="=WeChat/src&lt;com.halo.wechat.xml.utils.converters"/>
-        <javaElement handleIdentifier="=WeChat/src&lt;com.halo.servlet.listeners"/>
+        <javaElement handleIdentifier="=WTF/src&lt;com.halo.wechat.logger"/>
+        <javaElement handleIdentifier="=WTF/src&lt;com.halo.wechat.xml.utils"/>
+        <javaElement handleIdentifier="=WTF/src&lt;com.halo.servlet.listeners"/>
+        <javaElement handleIdentifier="=WTF/src&lt;com.halo.wechat.xml.utils.converters"/>
+        <javaElement handleIdentifier="=WTF/src&lt;com.halo.wechat.security"/>
     </selectedElements>
 </jardesc>
