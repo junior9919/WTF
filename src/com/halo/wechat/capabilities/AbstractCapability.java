@@ -1,5 +1,6 @@
 package com.halo.wechat.capabilities;
 
+import java.util.Map;
 import java.util.Properties;
 
 import com.halo.http.utils.HttpTemplate;
@@ -94,6 +95,27 @@ public abstract class AbstractCapability {
 	 */
 	public <T> T getJsonBean(JSONUtils<T> jsonUtils, String jsonStr) {
 		return jsonUtils.getJsonBean(jsonStr);
+	}
+
+	/**
+	 * 将json字符串转换成复杂对象，即对象的属性有类似List、Map、ArrayList或自定义的类型
+	 * 
+	 * @param jsonUtils
+	 *            JSONUtils对象，json字符串转换工具。JSONUtils由泛型定义，可以指定要解析的类。
+	 * @param jsonStr
+	 *            要解析的json字符串
+	 * @param classMap
+	 *            Map<String, Class>类型，对象中的复杂类型属性列表，String是属性名，Class是属性的类型。例如：
+	 *            <br>
+	 *            如果要转换的对象中有一个List<Item> items属性，这样定义Map<br>
+	 *            Map<String, Class> classMap = new HashMap<String, Class>();
+	 *            <br>
+	 *            classMap.put("items", Item.class);
+	 * @return 解析后的对象，类型由JSONUtils的泛型指定
+	 */
+	@SuppressWarnings("rawtypes")
+	public <T> T getComplexJsonBean(JSONUtils<T> jsonUtils, String jsonStr, Map<String, Class> classMap) {
+		return jsonUtils.getComplexJsonBean(jsonStr, classMap);
 	}
 
 	/**

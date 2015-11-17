@@ -33,4 +33,8 @@ public class Content {
 		this.news_item = news_item;
 	}
 
+	public Content() {
+
+	}
+	
 }

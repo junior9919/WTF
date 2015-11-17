@@ -10,9 +10,12 @@ import java.util.Map;
 import com.halo.http.utils.HttpUtilsException;
 import com.halo.json.utils.JSONUtils;
 import com.halo.wechat.capabilities.abilities.MaterialAbility;
+import com.halo.wechat.capabilities.beans.Content;
+import com.halo.wechat.capabilities.beans.Item;
 import com.halo.wechat.capabilities.beans.MaterialCountBean;
 import com.halo.wechat.capabilities.beans.MaterialListBean;
 import com.halo.wechat.capabilities.beans.MaterialResultBean;
+import com.halo.wechat.capabilities.beans.NewsItem;
 
 /**
  * 公众号经常有需要用到一些临时性的多媒体素材的场景，例如在使用接口特别是发送消息时，对多媒体文件、多媒体消息的获取和调用等操作，
@@ -168,7 +171,8 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 	 * 
 	 * @param type
 	 *            素材的类型，图片（image）、视频（video）、语音 （voice）、图文（news）。<br>
-	 *            本接口中定义了这几种类型的常量“MATERIAL_TYPE_IMAGE”、“MATERIAL_TYPE_VIDEO”、<br>
+	 *            本接口中定义了这几种类型的常量“MATERIAL_TYPE_IMAGE”、“MATERIAL_TYPE_VIDEO”、
+	 *            <br>
 	 *            “MATERIAL_TYPE_VOICE”、“MATERIAL_TYPE_NEWS”
 	 * @param offset
 	 *            从全部素材的该偏移位置开始返回，0表示从第一个素材 返回
@@ -197,8 +201,12 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Batch get material failed. ", e);
 		}
-
-		return getJsonBean(new JSONUtils<MaterialListBean>(MaterialListBean.class), resultStr);
+		@SuppressWarnings("rawtypes")
+		Map<String, Class> classMap = new HashMap<String, Class>();
+		classMap.put("news_item", NewsItem.class);
+		classMap.put("content", Content.class);
+		classMap.put("item", Item.class);
+		return getComplexJsonBean(new JSONUtils<MaterialListBean>(MaterialListBean.class), resultStr, classMap);
 	}
 
 	/**
@@ -265,7 +273,10 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 			throw new CapabilityException("Get permanent material failed. ", e);
 		}
 
-		return getJsonBean(new JSONUtils<MaterialResultBean>(MaterialResultBean.class), resultStr);
+		@SuppressWarnings("rawtypes")
+		Map<String, Class> classMap = new HashMap<String, Class>();
+		classMap.put("news_item", NewsItem.class);
+		return getComplexJsonBean(new JSONUtils<MaterialResultBean>(MaterialResultBean.class), resultStr, classMap);
 	}
 
 	/**

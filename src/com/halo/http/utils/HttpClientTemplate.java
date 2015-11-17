@@ -51,6 +51,11 @@ public class HttpClientTemplate implements HttpTemplate {
 	private File saveStreamToFile(InputStream stream) throws HttpUtilsException {
 		UUID uuid = new UUID(ThreadLocalRandom.current().nextLong(), ThreadLocalRandom.current().nextLong());
 		File downloadFile = new File(uuid.toString() + ".dld");
+		try {
+			downloadFile.createNewFile();
+		} catch (IOException e) {
+			throw new HttpUtilsException("Can't create new download file. ", e);
+		}
 
 		OutputStream outputStream = null;
 		try {
@@ -68,8 +73,10 @@ public class HttpClientTemplate implements HttpTemplate {
 			throw new HttpUtilsException("Can't read from input stream or write to output stream.", e);
 		} finally {
 			try {
-				outputStream.flush();
-				outputStream.close();
+				if (null != outputStream) {
+					outputStream.flush();
+					outputStream.close();
+				}
 			} catch (IOException e) {
 				throw new HttpUtilsException("Close stream error.", e);
 			}
@@ -93,7 +100,7 @@ public class HttpClientTemplate implements HttpTemplate {
 				int status = response.getStatusLine().getStatusCode();
 				if (status >= 200 && status < 300) {
 					HttpEntity entity = response.getEntity();
-					return entity != null ? EntityUtils.toString(entity) : null;
+					return entity != null ? EntityUtils.toString(entity, "UTF-8") : null;
 				} else {
 					throw new ClientProtocolException("Unexpected response status: " + status);
 				}
@@ -163,7 +170,8 @@ public class HttpClientTemplate implements HttpTemplate {
 	}
 
 	@Override
-	public String post(String url, Map<String, String> args, String requestBody, String contentType) throws HttpUtilsException {
+	public String post(String url, Map<String, String> args, String requestBody, String contentType)
+			throws HttpUtilsException {
 		String urlWithArgs = getUrlWithArgs(url, args);
 
 		CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -184,7 +192,7 @@ public class HttpClientTemplate implements HttpTemplate {
 				int status = response.getStatusLine().getStatusCode();
 				if (status >= 200 && status < 300) {
 					HttpEntity entity = response.getEntity();
-					return entity != null ? EntityUtils.toString(entity) : null;
+					return entity != null ? EntityUtils.toString(entity, "UTF-8") : null;
 				} else {
 					throw new ClientProtocolException("Unexpected response status: " + status);
 				}
@@ -208,7 +216,8 @@ public class HttpClientTemplate implements HttpTemplate {
 	}
 
 	@Override
-	public File downloadUsePost(String url, Map<String, String> args, String requestBody, String contentType) throws HttpUtilsException {
+	public File downloadUsePost(String url, Map<String, String> args, String requestBody, String contentType)
+			throws HttpUtilsException {
 		String urlWithArgs = getUrlWithArgs(url, args);
 
 		CloseableHttpClient httpClient = HttpClients.createDefault();

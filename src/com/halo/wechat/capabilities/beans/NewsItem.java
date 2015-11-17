@@ -150,4 +150,8 @@ public class NewsItem {
 		this.content_source_url = content_source_url;
 	}
 
+	public NewsItem() {
+
+	}
+	
 }

@@ -18,6 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.halo.spring.utils.SpringUtils;
 import com.halo.wechat.capabilities.CapabilityException;
 import com.halo.wechat.capabilities.abilities.MaterialAbility;
+import com.halo.wechat.capabilities.beans.Item;
 import com.halo.wechat.capabilities.beans.MaterialCountBean;
 import com.halo.wechat.capabilities.beans.MaterialListBean;
 import com.halo.wechat.capabilities.beans.NewsItem;
@@ -83,7 +84,7 @@ public class MaterialCapabilityTest {
 		assertNotNull(materialListBean);
 
 		String savedRecord = "共下载" + String.valueOf(count) + "条素材\r\n";
-		for (MaterialListBean.Item item : materialListBean.getItem()) {
+		for (Item item : materialListBean.getItem()) {
 			for (NewsItem newsItem : item.getContent().getNews_item()) {
 				File bigPicFile;
 				try {
