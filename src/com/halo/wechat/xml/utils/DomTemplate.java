@@ -69,7 +69,8 @@ public class DomTemplate implements XmlTemplate {
 		}
 
 		try {
-			document = builder.parse(new ByteArrayInputStream(xmlContent.getBytes()));
+			// 感谢Sean君的贡献，此处加上“UTF-8”的编码格式，避免处理文本消息时抛出MalformedByteSequenceException异常
+			document = builder.parse(new ByteArrayInputStream(xmlContent.getBytes("UTF-8")));
 		} catch (SAXException e) {
 			throw new XmlParseException("Parse XML failed. \r\n" + xmlContent, e);
 		} catch (IOException e) {
