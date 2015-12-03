@@ -6,7 +6,9 @@ import java.util.Map;
 import com.halo.http.utils.HttpUtilsException;
 import com.halo.json.utils.JSONUtils;
 import com.halo.wechat.capabilities.abilities.UserManagementAbility;
+import com.halo.wechat.capabilities.beans.ResultBean;
 import com.halo.wechat.capabilities.beans.UserInfoBean;
+import com.halo.wechat.capabilities.beans.UserRemarkBean;
 
 /**
  * @author zyl
@@ -15,6 +17,8 @@ import com.halo.wechat.capabilities.beans.UserInfoBean;
 public class UserManagementCapability extends AccessSupportCapability implements UserManagementAbility {
 
 	private final String GET_USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info";
+
+	private final String UPDATE_REMARK_URL = "https://api.weixin.qq.com/cgi-bin/user/info/updateremark";
 
 	/**
 	 * 无参构造方法，会自动调用AbstractCapability的无参构造方法，初始化"wechat.properties"配置文件。<br>
@@ -25,6 +29,39 @@ public class UserManagementCapability extends AccessSupportCapability implements
 	 */
 	public UserManagementCapability() throws PropertiesException {
 
+	}
+
+	/**
+	 * 开发者可以通过该接口对指定用户设置备注名，该接口暂时开放给微信认证的服务号。
+	 * 
+	 * @param String
+	 *            openId 用户标识
+	 * @param String
+	 *            remark 新的备注名，长度必须小于30字符
+	 * @return 微信公众平台接口调用返回码和详细说明
+	 */
+	@Override
+	public ResultBean updateRemark(String openId, String remark) throws CapabilityException {
+		Map<String, String> args = new HashMap<String, String>();
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
+
+		UserRemarkBean userRemarkBean = new UserRemarkBean();
+		userRemarkBean.setOpenid(openId);
+		userRemarkBean.setRemark(remark);
+
+		String jsonStr = getJsonStr(new JSONUtils<UserRemarkBean>(UserRemarkBean.class), userRemarkBean);
+		String resultStr = null;
+		try {
+			resultStr = this.getHttpTemplate().post(UPDATE_REMARK_URL, args, jsonStr, JSON_CONTENT_TYPE);
+		} catch (HttpUtilsException e) {
+			throw new CapabilityException("Update remark failed.", e);
+		}
+
+		return getJsonBean(new JSONUtils<ResultBean>(ResultBean.class), resultStr);
 	}
 
 	/**

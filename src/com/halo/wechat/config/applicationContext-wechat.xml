@@ -84,6 +84,9 @@
 	<bean id="materialAbility" class="com.halo.wechat.capabilities.MaterialCapability">
 		<property name="httpTemplate" ref="httpTemplate" />
 	</bean>
+	<bean id="userManagementAbility" class="com.halo.wechat.capabilities.UserManagementCapability">
+		<property name="httpTemplate" ref="httpTemplate" />
+	</bean>
 	<!-- 日志配置 -->
 	<bean id="appLogger" class="com.halo.wechat.logger.AppLogger" />
 	<aop:config>

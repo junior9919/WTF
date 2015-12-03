@@ -4,6 +4,7 @@
 package com.halo.wechat.capabilities.abilities;
 
 import com.halo.wechat.capabilities.CapabilityException;
+import com.halo.wechat.capabilities.beans.ResultBean;
 import com.halo.wechat.capabilities.beans.UserInfoBean;
 
 /**
@@ -14,6 +15,17 @@ import com.halo.wechat.capabilities.beans.UserInfoBean;
  *
  */
 public interface UserManagementAbility {
+
+	/**
+	 * 开发者可以通过该接口对指定用户设置备注名，该接口暂时开放给微信认证的服务号。
+	 * 
+	 * @param String
+	 *            openId 用户标识
+	 * @param String
+	 *            remark 新的备注名，长度必须小于30字符
+	 * @return 微信公众平台接口调用返回码和详细说明
+	 */
+	public ResultBean updateRemark(String openId, String remark) throws CapabilityException;
 
 	/**
 	 * 公众号可通过本接口来根据OpenID获取用户基本信息，包括昵称、头像、性别、所在城市、语言和关注时间。
