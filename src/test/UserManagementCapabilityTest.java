@@ -21,6 +21,7 @@ import com.halo.wechat.capabilities.CapabilityException;
 import com.halo.wechat.capabilities.abilities.UserManagementAbility;
 import com.halo.wechat.capabilities.beans.ResultBean;
 import com.halo.wechat.capabilities.beans.UserInfoBean;
+import com.halo.wechat.capabilities.beans.UserListBean;
 
 /**
  * @author zyl
@@ -44,6 +45,26 @@ public class UserManagementCapabilityTest {
 	@Before
 	public void setUp() throws Exception {
 		SpringUtils.setWebApplicationContext(webApplicationContext);
+	}
+
+	@Test
+	public void testGetUserList() throws CapabilityException {
+		UserListBean userListBean = userManagementAbility.getUserList("");
+
+		assertNotNull(userListBean);
+
+		System.out.println("total: " + userListBean.getTotal());
+		System.out.println("count: " + userListBean.getCount());
+
+		if (null != userListBean.getData()) {
+			for (String openId : userListBean.getData().getOpenid()) {
+				System.out.println("openid: " + openId);
+			}
+		}
+
+		System.out.println("next_openid: " + userListBean.getNext_openid());
+		System.out.println("errcode: " + userListBean.getErrcode());
+		System.out.println("errmsg: " + userListBean.getErrmsg());
 	}
 
 	@Test

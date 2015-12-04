@@ -6,6 +6,7 @@ package com.halo.wechat.capabilities.abilities;
 import com.halo.wechat.capabilities.CapabilityException;
 import com.halo.wechat.capabilities.beans.ResultBean;
 import com.halo.wechat.capabilities.beans.UserInfoBean;
+import com.halo.wechat.capabilities.beans.UserListBean;
 
 /**
  * 用户管理相关接口，包括：<br>
@@ -15,6 +16,17 @@ import com.halo.wechat.capabilities.beans.UserInfoBean;
  *
  */
 public interface UserManagementAbility {
+
+	/**
+	 * 公众号可通过本接口来获取帐号的关注者列表，关注者列表由一串OpenID组成。<br>
+	 * 一次拉取调用最多拉取10000个关注者的OpenID，可以通过多次拉取的方式来满足需求。
+	 * 
+	 * @param String
+	 *            nextOpenId 第一个拉取的OPENID，为null时默认从头开始拉取
+	 * @return UserListBean 关注者列表数据
+	 * @throws CapabilityException
+	 */
+	public UserListBean getUserList(String nextOpenId) throws CapabilityException;
 
 	/**
 	 * 开发者可以通过该接口对指定用户设置备注名，该接口暂时开放给微信认证的服务号。

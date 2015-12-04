@@ -6,8 +6,10 @@ import java.util.Map;
 import com.halo.http.utils.HttpUtilsException;
 import com.halo.json.utils.JSONUtils;
 import com.halo.wechat.capabilities.abilities.UserManagementAbility;
+import com.halo.wechat.capabilities.beans.DataBean;
 import com.halo.wechat.capabilities.beans.ResultBean;
 import com.halo.wechat.capabilities.beans.UserInfoBean;
+import com.halo.wechat.capabilities.beans.UserListBean;
 import com.halo.wechat.capabilities.beans.UserRemarkBean;
 
 /**
@@ -15,6 +17,8 @@ import com.halo.wechat.capabilities.beans.UserRemarkBean;
  *
  */
 public class UserManagementCapability extends AccessSupportCapability implements UserManagementAbility {
+
+	private final String GET_USER_LIST_URL = "https://api.weixin.qq.com/cgi-bin/user/get";
 
 	private final String GET_USER_INFO_URL = "https://api.weixin.qq.com/cgi-bin/user/info";
 
@@ -29,6 +33,41 @@ public class UserManagementCapability extends AccessSupportCapability implements
 	 */
 	public UserManagementCapability() throws PropertiesException {
 
+	}
+
+	/**
+	 * 公众号可通过本接口来获取帐号的关注者列表，关注者列表由一串OpenID组成。<br>
+	 * 一次拉取调用最多拉取10000个关注者的OpenID，可以通过多次拉取的方式来满足需求。
+	 * 
+	 * @param String
+	 *            nextOpenId 第一个拉取的OPENID，为空值("")时默认从头开始拉取
+	 * @return UserListBean 关注者列表数据
+	 * @throws CapabilityException
+	 */
+	@Override
+	public UserListBean getUserList(String nextOpenId) throws CapabilityException {
+		Map<String, String> args = new HashMap<String, String>();
+		try {
+			args.put("access_token", retrieveAccessToken().getAccess_token());
+		} catch (NullAccessTokenException e) {
+			throw new CapabilityException("Retrieve access token failed.", e);
+		}
+		if (!nextOpenId.isEmpty()) {
+			args.put("next_openid", nextOpenId);
+		}
+
+		String resultStr = null;
+		try {
+			resultStr = this.getHttpTemplate().get(GET_USER_LIST_URL, args);
+		} catch (HttpUtilsException e) {
+			throw new CapabilityException("Get user info failed.", e);
+		}
+
+		@SuppressWarnings("rawtypes")
+		Map<String, Class> classMap = new HashMap<String, Class>();
+		classMap.put("data", DataBean.class);
+
+		return getComplexJsonBean(new JSONUtils<UserListBean>(UserListBean.class), resultStr, classMap);
 	}
 
 	/**
