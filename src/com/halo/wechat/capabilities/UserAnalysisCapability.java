@@ -62,7 +62,6 @@ public class UserAnalysisCapability extends AccessSupportCapability implements U
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Get user summary failed.", e);
 		}
-
 		return getJsonBean(new JSONUtils<UserSummaryBean>(UserSummaryBean.class), resultStr);
 	}
 

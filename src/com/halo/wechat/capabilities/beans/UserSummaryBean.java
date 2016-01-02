@@ -1,7 +1,5 @@
 package com.halo.wechat.capabilities.beans;
 
-import java.util.List;
-
 /**
  * 获取用户增减数据接口的返回JSON数据包
  * 
@@ -12,21 +10,21 @@ import java.util.List;
  */
 public class UserSummaryBean extends ResultBean {
 
-	private List<UserSummaryData> list;
+	private UserSummaryData[] list;
 
 	/**
-	 * @return List<UserSummaryData> 有多条ref_date在begin_date和end_date之间的数据
+	 * @return UserSummaryData[] 有多条ref_date在begin_date和end_date之间的数据
 	 */
-	public List<UserSummaryData> getList() {
+	public UserSummaryData[] getList() {
 		return list;
 	}
 
 	/**
-	 * @param List<UserSummaryData>
+	 * @param UserSummaryData[]
 	 *            list 有多条ref_date在begin_date和end_date之间的数据
 	 */
-	public void setList(List<UserSummaryData> list) {
+	public void setList(UserSummaryData[] list) {
 		this.list = list;
 	}
-	
+
 }
