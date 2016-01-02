@@ -8,7 +8,7 @@ package com.halo.wechat.capabilities.beans;
  * @version 1.0
  * @since Wechat Framework 1.0
  */
-public class UserAnalysisBean {
+public class AnalysisBean {
 
 	private String begin_date;
 

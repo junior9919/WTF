@@ -17,7 +17,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.halo.spring.utils.SpringUtils;
 import com.halo.wechat.capabilities.CapabilityException;
 import com.halo.wechat.capabilities.abilities.UserAnalysisAbility;
-import com.halo.wechat.capabilities.beans.UserAnalysisBean;
+import com.halo.wechat.capabilities.beans.AnalysisBean;
 import com.halo.wechat.capabilities.beans.UserCumulateBean;
 import com.halo.wechat.capabilities.beans.UserCumulateData;
 import com.halo.wechat.capabilities.beans.UserSummaryBean;
@@ -52,18 +52,18 @@ public class UserAnalysisCapabilityTest {
 
 	/**
 	 * Test method for
-	 * {@link com.halo.wechat.capabilities.UserAnalysisCapability#getUserSummary(com.halo.wechat.capabilities.beans.UserAnalysisBean)}
+	 * {@link com.halo.wechat.capabilities.UserAnalysisCapability#getUserSummary(com.halo.wechat.capabilities.beans.AnalysisBean)}
 	 * .
 	 */
 	@Test
 	public void testGetUserSummary() {
-		UserAnalysisBean userAnalysisBean = new UserAnalysisBean();
-		userAnalysisBean.setBegin_date("2015-11-08");
-		userAnalysisBean.setEnd_date("2015-11-14");
+		AnalysisBean analysisBean = new AnalysisBean();
+		analysisBean.setBegin_date("2015-11-08");
+		analysisBean.setEnd_date("2015-11-14");
 
 		UserSummaryBean userSummaryBean = null;
 		try {
-			userSummaryBean = userAnalysisAbility.getUserSummary(userAnalysisBean);
+			userSummaryBean = userAnalysisAbility.getUserSummary(analysisBean);
 		} catch (CapabilityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -93,18 +93,18 @@ public class UserAnalysisCapabilityTest {
 
 	/**
 	 * Test method for
-	 * {@link com.halo.wechat.capabilities.UserAnalysisCapability#getUserCumulate(com.halo.wechat.capabilities.beans.UserAnalysisBean)}
+	 * {@link com.halo.wechat.capabilities.UserAnalysisCapability#getUserCumulate(com.halo.wechat.capabilities.beans.AnalysisBean)}
 	 * .
 	 */
 	@Test
 	public void testGetUserCumulate() {
-		UserAnalysisBean userAnalysisBean = new UserAnalysisBean();
-		userAnalysisBean.setBegin_date("2015-11-08");
-		userAnalysisBean.setEnd_date("2015-11-14");
+		AnalysisBean analysisBean = new AnalysisBean();
+		analysisBean.setBegin_date("2015-11-08");
+		analysisBean.setEnd_date("2015-11-14");
 
 		UserCumulateBean userCumulateBean = null;
 		try {
-			userCumulateBean = userAnalysisAbility.getUserCumulate(userAnalysisBean);
+			userCumulateBean = userAnalysisAbility.getUserCumulate(analysisBean);
 		} catch (CapabilityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

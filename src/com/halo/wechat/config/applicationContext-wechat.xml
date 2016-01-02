@@ -90,6 +90,9 @@
 	<bean id="userAnalysisAbility" class="com.halo.wechat.capabilities.UserAnalysisCapability">
 		<property name="httpTemplate" ref="httpTemplate" />
 	</bean>
+	<bean id="articleAnalysisAbility" class="com.halo.wechat.capabilities.ArticleAnalysisCapability">
+		<property name="httpTemplate" ref="httpTemplate" />
+	</bean>
 	<!-- 日志配置 -->
 	<bean id="appLogger" class="com.halo.wechat.logger.AppLogger" />
 	<aop:config>

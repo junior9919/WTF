@@ -9,7 +9,7 @@ import java.util.Map;
 import com.halo.http.utils.HttpUtilsException;
 import com.halo.json.utils.JSONUtils;
 import com.halo.wechat.capabilities.abilities.UserAnalysisAbility;
-import com.halo.wechat.capabilities.beans.UserAnalysisBean;
+import com.halo.wechat.capabilities.beans.AnalysisBean;
 import com.halo.wechat.capabilities.beans.UserCumulateBean;
 import com.halo.wechat.capabilities.beans.UserSummaryBean;
 
@@ -41,13 +41,13 @@ public class UserAnalysisCapability extends AccessSupportCapability implements U
 	/**
 	 * 获取用户增减数据
 	 * 
-	 * @param userAnalysisBean
+	 * @param analysisBean
 	 *            用户分析数据接口需要向相应接口调用地址POST的数据包
 	 * @return 获取用户增减数据接口的返回JSON数据包
 	 * @throws CapabilityException
 	 */
 	@Override
-	public UserSummaryBean getUserSummary(UserAnalysisBean userAnalysisBean) throws CapabilityException {
+	public UserSummaryBean getUserSummary(AnalysisBean analysisBean) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
 		try {
 			args.put("access_token", retrieveAccessToken().getAccess_token());
@@ -55,7 +55,7 @@ public class UserAnalysisCapability extends AccessSupportCapability implements U
 			throw new CapabilityException("Retrieve access token failed.", e);
 		}
 
-		String jsonStr = getJsonStr(new JSONUtils<UserAnalysisBean>(UserAnalysisBean.class), userAnalysisBean);
+		String jsonStr = getJsonStr(new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean);
 		String resultStr = null;
 		try {
 			resultStr = this.getHttpTemplate().post(GET_USER_SUMMARY_URL, args, jsonStr, JSON_CONTENT_TYPE);
@@ -68,13 +68,13 @@ public class UserAnalysisCapability extends AccessSupportCapability implements U
 	/**
 	 * 获取累计用户数据
 	 * 
-	 * @param userAnalysisBean
+	 * @param analysisBean
 	 *            用户分析数据接口需要向相应接口调用地址POST的数据包
 	 * @return 获取用户增减数据接口的返回JSON数据包
 	 * @throws CapabilityException
 	 */
 	@Override
-	public UserCumulateBean getUserCumulate(UserAnalysisBean userAnalysisBean) throws CapabilityException {
+	public UserCumulateBean getUserCumulate(AnalysisBean analysisBean) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
 		try {
 			args.put("access_token", retrieveAccessToken().getAccess_token());
@@ -82,7 +82,7 @@ public class UserAnalysisCapability extends AccessSupportCapability implements U
 			throw new CapabilityException("Retrieve access token failed.", e);
 		}
 
-		String jsonStr = getJsonStr(new JSONUtils<UserAnalysisBean>(UserAnalysisBean.class), userAnalysisBean);
+		String jsonStr = getJsonStr(new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean);
 		String resultStr = null;
 		try {
 			resultStr = this.getHttpTemplate().post(GET_USER_CUMULATE_URL, args, jsonStr, JSON_CONTENT_TYPE);
