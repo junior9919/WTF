@@ -65,11 +65,7 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 	@Override
 	public QrcodeResultBean getTemporaryQrcode(int expireSeconds, int sceneId) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
 		QrcodeBean qrcode = new QrcodeBean();
 		qrcode.setExpire_seconds(expireSeconds);
@@ -83,15 +79,15 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 
 		scene.setScene_id(sceneId);
 
-		String jsonStr = getJsonStr(new JSONUtils<QrcodeBean>(QrcodeBean.class), qrcode);
-		String resultStr = null;
+		QrcodeResultBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(GET_QRCODE_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(GET_QRCODE_URL, args,
+					new JSONUtils<QrcodeBean>(QrcodeBean.class), qrcode,
+					new JSONUtils<QrcodeResultBean>(QrcodeResultBean.class));
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Get QR_SCENE qrcode failed. ", e);
+			throw new CapabilityException("Get qrcode failed.", e);
 		}
-
-		return getJsonBean(new JSONUtils<QrcodeResultBean>(QrcodeResultBean.class), resultStr);
+		return resultBean;
 	}
 
 	/**
@@ -113,11 +109,7 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 	@Override
 	public QrcodeResultBean getPermanentQrcode(String sceneStr) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
 		QrcodeBean qrcode = new QrcodeBean();
 		qrcode.setAction_name(QrcodeBean.QR_LIMIT_STR_SCENE);
@@ -130,15 +122,15 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 
 		scene.setScene_str(sceneStr);
 
-		String jsonStr = getJsonStr(new JSONUtils<QrcodeBean>(QrcodeBean.class), qrcode);
-		String resultStr = null;
+		QrcodeResultBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(GET_QRCODE_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(GET_QRCODE_URL, args,
+					new JSONUtils<QrcodeBean>(QrcodeBean.class), qrcode,
+					new JSONUtils<QrcodeResultBean>(QrcodeResultBean.class));
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Get " + QrcodeBean.QR_LIMIT_STR_SCENE + " qrcode failed. ", e);
 		}
-
-		return getJsonBean(new JSONUtils<QrcodeResultBean>(QrcodeResultBean.class), resultStr);
+		return resultBean;
 	}
 
 	/**
@@ -158,11 +150,7 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 	@Override
 	public QrcodeResultBean getPermanentQrcode(int sceneId) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
 		QrcodeBean qrcode = new QrcodeBean();
 		qrcode.setAction_name(QrcodeBean.QR_LIMIT_SCENE);
@@ -175,15 +163,15 @@ public class QrcodeCapability extends AccessSupportCapability implements QrcodeA
 
 		scene.setScene_id(sceneId);
 
-		String jsonStr = getJsonStr(new JSONUtils<QrcodeBean>(QrcodeBean.class), qrcode);
-		String resultStr = null;
+		QrcodeResultBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(GET_QRCODE_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(GET_QRCODE_URL, args,
+					new JSONUtils<QrcodeBean>(QrcodeBean.class), qrcode,
+					new JSONUtils<QrcodeResultBean>(QrcodeResultBean.class));
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Get " + QrcodeBean.QR_LIMIT_SCENE + " qrcode failed. ", e);
 		}
-
-		return getJsonBean(new JSONUtils<QrcodeResultBean>(QrcodeResultBean.class), resultStr);
+		return resultBean;
 	}
 
 	/**

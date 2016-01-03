@@ -147,11 +147,7 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 	@Override
 	public MaterialCountBean getMaterialCount() throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
 		String resultStr = null;
 		try {
@@ -187,11 +183,7 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 	@Override
 	public MaterialListBean batchGetMaterial(String type, short offset, short count) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
 		BatchGetCondition batchGetCondition = new BatchGetCondition(type, offset, count);
 		String jsonStr = getJsonStr(new JSONUtils<BatchGetCondition>(BatchGetCondition.class), batchGetCondition);
@@ -220,11 +212,7 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 	@Override
 	public File getMedia(String mediaId) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 		args.put("media_id", mediaId);
 
 		File mediaFile = null;
@@ -258,11 +246,7 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 	@Override
 	public MaterialResultBean getMaterial(String mediaId) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
 		MediaIdBean mediadBean = new MediaIdBean(mediaId);
 		String jsonStr = getJsonStr(new JSONUtils<MediaIdBean>(MediaIdBean.class), mediadBean);
@@ -291,11 +275,7 @@ public class MaterialCapability extends AccessSupportCapability implements Mater
 	@Override
 	public File downloadMaterial(String mediaId) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
 		MediaIdBean mediadBean = new MediaIdBean(mediaId);
 		String jsonStr = getJsonStr(new JSONUtils<MediaIdBean>(MediaIdBean.class), mediadBean);

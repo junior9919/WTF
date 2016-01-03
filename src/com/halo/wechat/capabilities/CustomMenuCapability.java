@@ -51,21 +51,16 @@ public class CustomMenuCapability extends AccessSupportCapability implements Cus
 	@Override
 	public ResultBean createMenu(MenuBean menu) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
-		String jsonStr = getJsonStr(new JSONUtils<MenuBean>(MenuBean.class), menu);
-		String resultStr = null;
+		ResultBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(CREATE_MENU_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(CREATE_MENU_URL, args, new JSONUtils<MenuBean>(MenuBean.class),
+					menu, new JSONUtils<ResultBean>(ResultBean.class));
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Create menu failed.", e);
 		}
-
-		return getJsonBean(new JSONUtils<ResultBean>(ResultBean.class), resultStr);
+		return resultBean;
 	}
 
 	/**
@@ -79,11 +74,7 @@ public class CustomMenuCapability extends AccessSupportCapability implements Cus
 	@Override
 	public MenuResultBean getMenu() throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
 		String resultStr = null;
 		try {
@@ -106,11 +97,7 @@ public class CustomMenuCapability extends AccessSupportCapability implements Cus
 	@Override
 	public ResultBean deleteMenu() throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
 		String resultStr = null;
 		try {

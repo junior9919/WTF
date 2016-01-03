@@ -47,11 +47,7 @@ public class UserManagementCapability extends AccessSupportCapability implements
 	@Override
 	public UserListBean getUserList(String nextOpenId) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 		if (!nextOpenId.isEmpty()) {
 			args.put("next_openid", nextOpenId);
 		}
@@ -82,25 +78,21 @@ public class UserManagementCapability extends AccessSupportCapability implements
 	@Override
 	public ResultBean updateRemark(String openId, String remark) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
 		UserRemarkBean userRemarkBean = new UserRemarkBean();
 		userRemarkBean.setOpenid(openId);
 		userRemarkBean.setRemark(remark);
 
-		String jsonStr = getJsonStr(new JSONUtils<UserRemarkBean>(UserRemarkBean.class), userRemarkBean);
-		String resultStr = null;
+		ResultBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(UPDATE_REMARK_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(UPDATE_REMARK_URL, args,
+					new JSONUtils<UserRemarkBean>(UserRemarkBean.class), userRemarkBean,
+					new JSONUtils<ResultBean>(ResultBean.class));
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Update remark failed.", e);
 		}
-
-		return getJsonBean(new JSONUtils<ResultBean>(ResultBean.class), resultStr);
+		return resultBean;
 	}
 
 	/**
@@ -115,11 +107,7 @@ public class UserManagementCapability extends AccessSupportCapability implements
 	@Override
 	public UserInfoBean getUserInfo(String openId, String lang) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 		args.put("openid", openId);
 		args.put("lang", lang);
 

@@ -61,20 +61,17 @@ public class ArticleAnalysisCapability extends AccessSupportCapability implement
 	@Override
 	public ArticleSummaryBean getArticleSummary(AnalysisBean analysisBean) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
-		String jsonStr = getJsonStr(new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean);
-		String resultStr = null;
+		ArticleSummaryBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(GET_ARTICLE_SUMMARY_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(GET_ARTICLE_SUMMARY_URL, args,
+					new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean,
+					new JSONUtils<ArticleSummaryBean>(ArticleSummaryBean.class));
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Get article summary failed.", e);
 		}
-		return getJsonBean(new JSONUtils<ArticleSummaryBean>(ArticleSummaryBean.class), resultStr);
+		return resultBean;
 	}
 
 	/**
@@ -87,20 +84,17 @@ public class ArticleAnalysisCapability extends AccessSupportCapability implement
 	@Override
 	public ArticleTotalBean getArticleTotal(AnalysisBean analysisBean) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
-		String jsonStr = getJsonStr(new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean);
-		String resultStr = null;
+		ArticleTotalBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(GET_ARTICLE_TOTAL_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(GET_ARTICLE_TOTAL_URL, args,
+					new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean,
+					new JSONUtils<ArticleTotalBean>(ArticleTotalBean.class));
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Get article total failed.", e);
 		}
-		return getJsonBean(new JSONUtils<ArticleTotalBean>(ArticleTotalBean.class), resultStr);
+		return resultBean;
 	}
 
 	/**
@@ -113,20 +107,17 @@ public class ArticleAnalysisCapability extends AccessSupportCapability implement
 	@Override
 	public UserReadBean getUserRead(AnalysisBean analysisBean) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
-		String jsonStr = getJsonStr(new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean);
-		String resultStr = null;
+		UserReadBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(GET_USER_READ_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(GET_USER_READ_URL, args,
+					new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean,
+					new JSONUtils<UserReadBean>(UserReadBean.class));
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Get user read failed.", e);
 		}
-		return getJsonBean(new JSONUtils<UserReadBean>(UserReadBean.class), resultStr);
+		return resultBean;
 	}
 
 	/**
@@ -139,20 +130,17 @@ public class ArticleAnalysisCapability extends AccessSupportCapability implement
 	@Override
 	public UserReadHourBean getUserReadHour(AnalysisBean analysisBean) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
-		String jsonStr = getJsonStr(new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean);
-		String resultStr = null;
+		UserReadHourBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(GET_USER_READ_HOUR_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(GET_USER_READ_HOUR_URL, args,
+					new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean,
+					new JSONUtils<UserReadHourBean>(UserReadHourBean.class));
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Get user read hour failed.", e);
 		}
-		return getJsonBean(new JSONUtils<UserReadHourBean>(UserReadHourBean.class), resultStr);
+		return resultBean;
 	}
 
 	/**
@@ -165,20 +153,17 @@ public class ArticleAnalysisCapability extends AccessSupportCapability implement
 	@Override
 	public UserShareBean getUserShare(AnalysisBean analysisBean) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
-		String jsonStr = getJsonStr(new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean);
-		String resultStr = null;
+		UserShareBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(GET_USER_SHARE_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(GET_USER_SHARE_URL, args,
+					new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean,
+					new JSONUtils<UserShareBean>(UserShareBean.class));
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Get user share failed.", e);
 		}
-		return getJsonBean(new JSONUtils<UserShareBean>(UserShareBean.class), resultStr);
+		return resultBean;
 	}
 
 	/**
@@ -191,20 +176,17 @@ public class ArticleAnalysisCapability extends AccessSupportCapability implement
 	@Override
 	public UserShareHourBean getUserShareHour(AnalysisBean analysisBean) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
-		String jsonStr = getJsonStr(new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean);
-		String resultStr = null;
+		UserShareHourBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(GET_USER_SHARE_HOUR_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(GET_USER_SHARE_HOUR_URL, args,
+					new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean,
+					new JSONUtils<UserShareHourBean>(UserShareHourBean.class));
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Get user share hour failed.", e);
 		}
-		return getJsonBean(new JSONUtils<UserShareHourBean>(UserShareHourBean.class), resultStr);
+		return resultBean;
 	}
 
 }

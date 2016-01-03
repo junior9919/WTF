@@ -24,7 +24,11 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import com.halo.json.utils.JSONUtils;
+
 public class HttpClientTemplate implements HttpTemplate {
+
+	private final String JSON_CONTENT_TYPE = "application/json";
 
 	private String getUrlWithArgs(String url, Map<String, String> args) throws HttpUtilsException {
 		String params = "";
@@ -213,6 +217,15 @@ public class HttpClientTemplate implements HttpTemplate {
 		}
 
 		return responseBody;
+	}
+
+	@Override
+	public <P, R> R jsonPost(String url, Map<String, String> args, JSONUtils<P> postJsonUtils, P postJsonBean,
+			JSONUtils<R> resultJsonUtils) throws HttpUtilsException {
+		String jsonStr = postJsonUtils.getJsonStr(postJsonBean);
+		String resultStr = this.post(url, args, jsonStr, JSON_CONTENT_TYPE);
+
+		return resultJsonUtils.getJsonBean(resultStr);
 	}
 
 	@Override

@@ -49,20 +49,17 @@ public class UserAnalysisCapability extends AccessSupportCapability implements U
 	@Override
 	public UserSummaryBean getUserSummary(AnalysisBean analysisBean) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
-		String jsonStr = getJsonStr(new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean);
-		String resultStr = null;
+		UserSummaryBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(GET_USER_SUMMARY_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(GET_USER_SUMMARY_URL, args,
+					new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean,
+					new JSONUtils<UserSummaryBean>(UserSummaryBean.class));
 		} catch (HttpUtilsException e) {
 			throw new CapabilityException("Get user summary failed.", e);
 		}
-		return getJsonBean(new JSONUtils<UserSummaryBean>(UserSummaryBean.class), resultStr);
+		return resultBean;
 	}
 
 	/**
@@ -76,21 +73,17 @@ public class UserAnalysisCapability extends AccessSupportCapability implements U
 	@Override
 	public UserCumulateBean getUserCumulate(AnalysisBean analysisBean) throws CapabilityException {
 		Map<String, String> args = new HashMap<String, String>();
-		try {
-			args.put("access_token", retrieveAccessToken().getAccess_token());
-		} catch (NullAccessTokenException e) {
-			throw new CapabilityException("Retrieve access token failed.", e);
-		}
+		putAccessTokenIntoArgs(args);
 
-		String jsonStr = getJsonStr(new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean);
-		String resultStr = null;
+		UserCumulateBean resultBean = null;
 		try {
-			resultStr = this.getHttpTemplate().post(GET_USER_CUMULATE_URL, args, jsonStr, JSON_CONTENT_TYPE);
+			resultBean = this.getHttpTemplate().jsonPost(GET_USER_CUMULATE_URL, args,
+					new JSONUtils<AnalysisBean>(AnalysisBean.class), analysisBean,
+					new JSONUtils<UserCumulateBean>(UserCumulateBean.class));
 		} catch (HttpUtilsException e) {
-			throw new CapabilityException("Get user summary failed.", e);
+			throw new CapabilityException("Get user cumulate failed.", e);
 		}
-
-		return getJsonBean(new JSONUtils<UserCumulateBean>(UserCumulateBean.class), resultStr);
+		return resultBean;
 	}
 
 }
