@@ -97,6 +97,10 @@
 		class="com.halo.wechat.capabilities.UpStreamMsgAnalysisCapability">
 		<property name="httpTemplate" ref="httpTemplate" />
 	</bean>
+	<bean id="interfaceAnalysisAbility"
+		class="com.halo.wechat.capabilities.InterfaceAnalysisCapability">
+		<property name="httpTemplate" ref="httpTemplate" />
+	</bean>
 	<!-- 日志配置 -->
 	<bean id="appLogger" class="com.halo.wechat.logger.AppLogger" />
 	<aop:config>

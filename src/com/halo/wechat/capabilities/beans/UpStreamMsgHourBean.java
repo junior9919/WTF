@@ -11,7 +11,7 @@ package com.halo.wechat.capabilities.beans;
  * @version
  * @since
  */
-public class UpStreamMsgHourBean {
+public class UpStreamMsgHourBean extends ResultBean {
 
 	private UpStreamMsgHourData[] list;
 

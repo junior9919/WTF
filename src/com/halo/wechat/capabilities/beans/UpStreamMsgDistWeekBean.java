@@ -8,7 +8,7 @@ package com.halo.wechat.capabilities.beans;
  * @version
  * @since
  */
-public class UpStreamMsgDistWeekBean {
+public class UpStreamMsgDistWeekBean extends ResultBean {
 
 	private UpStreamMsgDistWeekData[] list;
 
