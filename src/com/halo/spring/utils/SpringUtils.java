@@ -72,6 +72,16 @@ public class SpringUtils implements ApplicationContextAware {
 		}
 		servletContext.setAttribute(attrId, toAdd);
 	}
+	
+	public static void removeFromServletContext(String attrId) throws NullApplicationContextException {
+		loadWebApplicationContext();
+		ServletContext servletContext = webApplicationContext.getServletContext();
+		if (null == servletContext) {
+			throw new NullApplicationContextException("Servlet context in web application context is null.");
+		}
+
+		servletContext.removeAttribute(attrId);
+	}
 
 	public static Object getFromServletContext(String attrId) {
 		loadWebApplicationContext();
